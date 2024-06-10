@@ -28,7 +28,6 @@ st.markdown(
 )
 
 # Interfaz de usuario en Streamlit
-st.title('Predicción de Clúster')
 
 categoria = st.selectbox("Seleccione la categoría:", ["Deportes", "Política", "Economía", "Salud y Bienestas", "El Mundo", "Edición Impresa"])
 sentimiento = st.selectbox("Seleccione el sentimiento:", [0, 1, 2])
