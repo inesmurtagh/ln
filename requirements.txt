@@ -1,6 +1,11 @@
-streamlit
+altair
+st-gsheets-connection
+nltk
+gensim==4.3.0
+matplotlib==3.7.2
+numpy==1.26.2
 pandas
-numpy
-scikit-learn
-pickle-mixin
+streamlit==1.28.0
+scipy==1.11.3
 kmodes
+deap
