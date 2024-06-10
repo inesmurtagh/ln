@@ -24,10 +24,24 @@ st.markdown(
         color: white;
     }}
     .stSelectbox, .stTextInput, .stButton > button {{
-        color: black;
+        color: white;
+    }}
+    .stSelectbox label, .stTextInput label, .stButton > button {{
+        color: white;
+    }}
+    .stSelectbox div[role="combobox"] > div {{
+        color: black;  /* para asegurar que el texto dentro de la caja select esté en negro */
     }}
     .stMarkdown {{
         color: white;
+    }}
+    /* Ocultar la barra de menú superior */
+    header {{
+        visibility: hidden;
+    }}
+    /* Ocultar el botón de gestión de la aplicación */
+    footer {{
+        visibility: hidden;
     }}
     </style>
     """,
