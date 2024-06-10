@@ -43,6 +43,19 @@ st.markdown(
     footer {{
         visibility: hidden;
     }}
+    .stButton > button {{
+        color: #016aff;
+        background-color: white;
+        border: 2px solid #016aff;
+    }}
+    .stButton > button:hover {{
+        color: white;
+        background-color: #016aff;
+    }}
+    .stButton > button:active {{
+        color: white;
+        background-color: black;
+    }}
     </style>
     """,
     unsafe_allow_html=True
@@ -56,7 +69,7 @@ titulo = st.text_input("Ingrese el título:")
 subtitulo = st.text_input("Ingrese el subtítulo:")
 autor = st.selectbox("Seleccione el tipo de autor:", [0, 1])
 
-if st.button('Predecir Clúster'):
+if st.button('Obtener recomendaciones'):
     # Transformar los inputs a un formato adecuado para el modelo
     bins_titulo = [0, 13, 17, float('inf')]
     labels_titulo = ['Corto', 'Mediano', 'Largo']
