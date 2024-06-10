@@ -255,7 +255,7 @@ def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
     noise = np.random.normal(0, df_cluster['pageviews'].std())
 
     if pageviews_mean > 0:
-        variation = ((pageviews_mean - benchmark_cluster) / benchmark_cluster) * 100 + noise
+        variation = ((pageviews_mean - benchmark_cluster) / benchmark_cluster) * 100
     else:
         variation = -np.inf
 
