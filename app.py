@@ -30,11 +30,11 @@ st.markdown(
 # Interfaz de usuario en Streamlit
 st.title('Predicción de Clúster')
 
-categoria = st.selectbox("Seleccione la categoría:", ["Deportes", "Política", "Economía", "Tecnología", "Entretenimiento"])
-sentimiento = st.selectbox("Seleccione el sentimiento:", ["negativo", "neutral", "positivo"])
+categoria = st.selectbox("Seleccione la categoría:", ["Deportes", "Política", "Economía", "Salud y Bienestas", "El Mundo", "Edición Impresa"])
+sentimiento = st.selectbox("Seleccione el sentimiento:", [0, 1, 2])
 titulo = st.text_input("Ingrese el título:")
 subtitulo = st.text_input("Ingrese el subtítulo:")
-autor = st.selectbox("Seleccione el tipo de autor:", ["0 (desconocido)", "1 (conocido)"])
+autor = st.selectbox("Seleccione el tipo de autor:", [0, 1])
 
 if st.button('Predecir Clúster'):
     # Transformar los inputs a un formato adecuado para el modelo
