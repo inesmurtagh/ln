@@ -7,7 +7,7 @@ import base64
 with open("data/best_kmodes.pkl", "rb") as f:
     kmodes_model = pickle.load(f)
 
-# CSS para el fondo
+# CSS para el fondo y el color del texto
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
@@ -21,6 +21,13 @@ st.markdown(
     .stApp {{
         background: url("data:image/png;base64,{img_base64}") no-repeat center center fixed;
         background-size: cover;
+        color: white;
+    }}
+    .stSelectbox, .stTextInput, .stButton > button {{
+        color: black;
+    }}
+    .stMarkdown {{
+        color: white;
     }}
     </style>
     """,
@@ -29,7 +36,7 @@ st.markdown(
 
 # Interfaz de usuario en Streamlit
 
-categoria = st.selectbox("Seleccione la categoría:", ["Deportes", "Política", "Economía", "Salud y Bienestas", "El Mundo", "Edición Impresa"])
+categoria = st.selectbox("Seleccione la categoría:", ["Deportes", "Política", "Economía", "Salud y Bienestar", "El Mundo", "Edición Impresa"])
 sentimiento = st.selectbox("Seleccione el sentimiento:", [0, 1, 2])
 titulo = st.text_input("Ingrese el título:")
 subtitulo = st.text_input("Ingrese el subtítulo:")
@@ -56,7 +63,7 @@ if st.button('Predecir Clúster'):
 
     # Predecir el clúster
     cluster = kmodes_model.predict(input_data)
-    st.write(f"El clúster de la nota es: {cluster[0]}")
+    st.markdown(f"<p style='color:white;'>El clúster de la nota es: {cluster[0]}</p>", unsafe_allow_html=True)
 
 # Para ejecutar:
 # streamlit run app.py
