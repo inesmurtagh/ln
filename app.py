@@ -13,6 +13,8 @@ from kmodes.kmodes import KModes
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from deap import base, creator, tools, algorithms
+import os
+import base64
 
 # Cargar el modelo K-Modes preentrenado
 with open("data/best_kmodes.pkl", "rb") as f:
@@ -24,53 +26,55 @@ def get_base64_of_bin_file(bin_file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-img_base64 = get_base64_of_bin_file('images/background.png')
-
-st.markdown(
-    f"""
-    <style>
-    .stApp {{
-        background: url("data:image/png;base64,{img_base64}") no-repeat center center fixed;
-        background-size: cover;
-        color: white;
-    }}
-    .stSelectbox, .stTextInput, .stButton > button {{
-        color: white;
-    }}
-    .stSelectbox label, .stTextInput label, .stButton > button {{
-        color: white;
-    }}
-    .stSelectbox div[role="combobox"] > div {{
-        color: black;  /* para asegurar que el texto dentro de la caja select esté en negro */
-    }}
-    .stMarkdown {{
-        color: white;
-    }}
-    /* Ocultar la barra de menú superior */
-    header {{
-        visibility: hidden;
-    }}
-    /* Ocultar el botón de gestión de la aplicación */
-    footer {{
-        visibility: hidden;
-    }}
-    .stButton > button {{
-        color: #016aff;
-        background-color: white;
-        border: 2px solid #016aff;
-    }}
-    .stButton > button:hover {{
-        color: white;
-        background-color: #016aff;
-    }}
-    .stButton > button:active {{
-        color: white;
-        background-color: black;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+try:
+    img_base64 = get_base64_of_bin_file('images/background.png')
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background: url("data:image/png;base64,{img_base64}") no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }}
+        .stSelectbox, .stTextInput, .stButton > button {{
+            color: white;
+        }}
+        .stSelectbox label, .stTextInput label, .stButton > button {{
+            color: white;
+        }}
+        .stSelectbox div[role="combobox"] > div {{
+            color: black;  /* para asegurar que el texto dentro de la caja select esté en negro */
+        }}
+        .stMarkdown {{
+            color: white;
+        }}
+        /* Ocultar la barra de menú superior */
+        header {{
+            visibility: hidden;
+        }}
+        /* Ocultar el botón de gestión de la aplicación */
+        footer {{
+            visibility: hidden;
+        }}
+        .stButton > button {{
+            color: #016aff;
+            background-color: white;
+            border: 2px solid #016aff;
+        }}
+        .stButton > button:hover {{
+            color: white;
+            background-color: #016aff;
+        }}
+        .stButton > button:active {{
+            color: white;
+            background-color: black;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+except FileNotFoundError:
+    st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
 # Interfaz de usuario en Streamlit
 st.title('Sistema de Recomendación para Notas :book:')
