@@ -51,7 +51,8 @@ if st.button('Predecir Clúster'):
         'sentiment': [sentimiento],
         'tipo_autor': [autor],
         'rangotitulo': [rango_titulo],
-        'rangosubtitulo': [rango_subtitulo]
+        'rangosubtitulo': [rango_subtitulo],
+        'topic': 7
     })
 
     # Predecir el clúster
