@@ -153,12 +153,12 @@ def de_encode_pregunta(pregunta):
 def cargar_modelo_lda(filename):
     return LdaModel.load(filename)
 
-lda_model = cargar_modelo_lda("modelo_lda.gensim")
+lda_model = cargar_modelo_lda("data/lda_model.gensim")
 
 def cargar_diccionario(filename):
     return Dictionary.load(filename)
 
-dictionary = cargar_diccionario("diccionario.gensim")
+dictionary = cargar_diccionario("data/diccionario.gensim")
 
 # Cargar el DataFrame
 df = pd.read_csv('clusters.csv')
@@ -185,7 +185,7 @@ def preprocess_text(text):
     tokens = text.split()
     
     # Carga de stopwords en español desde el archivo CSV
-    stop_words_df = pd.read_csv("spanish", delimiter="\t", header=None)
+    stop_words_df = pd.read_csv("data/spanish", delimiter="\t", header=None)
     stop_words = set(stop_words_df[0].tolist())
     
     # Eliminación de stopwords del texto
