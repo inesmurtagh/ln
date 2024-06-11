@@ -66,6 +66,9 @@ try:
             color: white;
             background-color: #008cff;
         }}
+        .css-1avcm0n {{
+            color: white !important;
+        }}
         </style>
         """,
         unsafe_allow_html=True
@@ -78,7 +81,7 @@ condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles
 categoria = st.selectbox("Seleccione la categoria", options=condition_options)
 sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
 titulo = st.text_input("Ingrese el título:")
-subtitulo = st.text_input("Ingrese el subtítulo (Opcional):")
+subtitulo = st.text_input("Ingrese el subtítulo:")
 autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
 
 # Función para codificar 'categoria'
@@ -345,8 +348,12 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 if st.button('Obtener recomendaciones'):
-    if not titulo:
+    if not titulo and not subtitulo:
+        st.error('Por favor ingrese un título y un subtítulo.')
+    elif not titulo:
         st.error('Por favor ingrese un título.')
+    elif not subtitulo:
+        st.error('Por favor ingrese un subtítulo.')
     else:
         try:
             modelo_clasificacion = modelo_clas(df)
@@ -358,3 +365,4 @@ if st.button('Obtener recomendaciones'):
             st.write(f"Estrategia recomendada para el pregunta: {de_encode_pregunta(estrategia_recomendada[0][4])}")
         except ValueError as e:
             st.write(f"Error: {e}")
+            
