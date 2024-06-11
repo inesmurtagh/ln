@@ -68,7 +68,7 @@ try:
         }}
         .stButton > button:active {{
             color: white;
-            background-color: black;
+            background-color: #008cff;
         }}
         </style>
         """,
