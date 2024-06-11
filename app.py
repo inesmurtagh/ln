@@ -208,7 +208,7 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     categoria = encode_categoria(categoria)
 
     # Transformar el sentimiento a valores numéricos
-    sentiment_value = {'negativo': 0, 'neutral': 1, 'positivo': 2}[sentimiento]
+    sentiment_value = {'Negativo': 0, 'Neutral': 1, 'Positivo': 2}[sentimiento]
 
     # Calcular rangotitulo y rangosubtitulo
     bins_titulo = [0, 13, 17, float('inf')]
