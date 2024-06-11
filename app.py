@@ -43,7 +43,7 @@ try:
             color: white;
         }}
         .stSelectbox div[role="combobox"] > div {{
-            color: #005bff;
+            color: #008cff;
         }}
         .stMarkdown {{
             color: white;
@@ -57,14 +57,14 @@ try:
             visibility: hidden;
         }}
         .stButton > button {{
-            color: #005bff;
+            color: #008cff;
             background-color: white;
-            border: 2px solid #005bff;
+            border: 2px solid #008cff;
         }}
         .stButton > button:hover {{
             color: white;
-            background-color: #005bff;
-            border-color: #005bff;  /* Cambiar el color del borde a negro cuando se pasa el cursor por encima */
+            background-color: #008cff;
+            border-color: #008cff;  /* Cambiar el color del borde a negro cuando se pasa el cursor por encima */
         }}
         .stButton > button:active {{
             color: white;
