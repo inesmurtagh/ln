@@ -43,7 +43,7 @@ try:
             color: white;
         }}
         .stSelectbox div[role="combobox"] > div {{
-            color: #005bff;  /* para asegurar que el texto dentro de la caja select esté en negro */
+            color: #005bff;
         }}
         .stMarkdown {{
             color: white;
@@ -57,9 +57,9 @@ try:
             visibility: hidden;
         }}
         .stButton > button {{
-            color: #016aff;
+            color: #005bff;
             background-color: white;
-            border: 2px solid #016aff;
+            border: 2px solid #005bff;
         }}
         .stButton > button:hover {{
             color: white;
