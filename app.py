@@ -63,7 +63,7 @@ try:
         }}
         .stButton > button:hover {{
             color: white;
-            background-color: #016aff;
+            background-color: black;
         }}
         .stButton > button:active {{
             color: white;
