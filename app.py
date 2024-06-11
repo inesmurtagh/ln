@@ -4,7 +4,7 @@ import numpy as np
 import gensim
 from gensim import corpora, models
 from gensim.corpora import Dictionary
-from gensim.models import LdaModel
+fromgensim.models import LdaModel
 import pickle
 import nltk
 import requests
@@ -64,7 +64,8 @@ try:
         }}
         .stButton > button:active {{
             color: white;
-            background-color: #008cff;
+            background-color: #0056b3;
+            border-color: #0056b3;
         }}
         </style>
         """,
