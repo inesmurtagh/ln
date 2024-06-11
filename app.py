@@ -4,7 +4,7 @@ import numpy as np
 import gensim
 from gensim import corpora, models
 from gensim.corpora import Dictionary
-fromgensim.models import LdaModel
+from gensim.models import LdaModel
 import pickle
 import nltk
 import requests
