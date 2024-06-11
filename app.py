@@ -80,10 +80,10 @@ except FileNotFoundError:
 # Interfaz de usuario en Streamlit
 condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
 categoria = st.selectbox("Seleccione la categoria", options=condition_options)
-sentimiento = st.selectbox("Seleccione el sentimiento:", ["negativo", "neutral", "positivo"])
+sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
 titulo = st.text_input("Ingrese el título:")
 subtitulo = st.text_input("Ingrese el subtítulo:")
-autor = st.selectbox("Seleccione el tipo de autor:", ["0 (desconocido)", "1 (conocido)"])
+autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
 
 # Función para codificar 'categoria'
 def encode_categoria(categoria):
@@ -130,12 +130,6 @@ def de_encode_rango(rango):
     else:
         return 'Mediano'
 
-# Función para decodificar 'autor'
-def de_encode_autor(autor):
-    if autor == 0:
-        return 'Desconocido'
-    else:
-        return 'Conocido'
 
 # Función para decodificar 'sentimiento'
 def de_encode_sentimiento(sentimiento):
@@ -353,13 +347,11 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 if st.button('Obtener recomendaciones'):
-    autor = int(autor.split()[0])
     try:
         modelo_clasificacion = modelo_clas(df)
         cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
         estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
         st.write(f"Estrategia recomendada para el sentimiento: {de_encode_sentimiento(estrategia_recomendada[0][0])}")
-        st.write(f"Estrategia recomendada para el tipo de autor: {de_encode_autor(estrategia_recomendada[0][1])}")
         st.write(f"Estrategia recomendada para el titulo: {de_encode_rango(estrategia_recomendada[0][2])}")
         st.write(f"Estrategia recomendada para el subtitulo: {de_encode_rango(estrategia_recomendada[0][3])}")
         st.write(f"Estrategia recomendada para el pregunta: {de_encode_pregunta(estrategia_recomendada[0][4])}")
