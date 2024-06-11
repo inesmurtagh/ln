@@ -64,8 +64,8 @@ try:
         }}
         .stButton > button:active {{
             color: white;
-            background-color: #0056b3;
-            border-color: #0056b3;
+            background-color: #008cff;
+            border-color: #008cff;
         }}
         </style>
         """,
