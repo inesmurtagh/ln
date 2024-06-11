@@ -64,6 +64,7 @@ try:
         .stButton > button:hover {{
             color: white;
             background-color: black;
+            border-color: black;  /* Cambiar el color del borde a negro cuando se pasa el cursor por encima */
         }}
         .stButton > button:active {{
             color: white;
@@ -75,6 +76,7 @@ try:
     )
 except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
+
 
 # Interfaz de usuario en Streamlit
 condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
