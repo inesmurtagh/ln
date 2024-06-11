@@ -209,7 +209,10 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Transformar el sentimiento a valores numéricos
     sentiment_value = {'Negativo': 0, 'Neutral': 1, 'Positivo': 2}[sentimiento]
-
+    
+    # Transformar el sentimiento a valores numéricos
+    autor_value = {'Usuario': 0, 'Firma': 1}[autor]
+    
     # Calcular rangotitulo y rangosubtitulo
     bins_titulo = [0, 13, 17, float('inf')]
     labels_titulo = ['Corto', 'Mediano', 'Largo']
@@ -228,7 +231,7 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
-        'tipo_autor': [autor],
+        'tipo_autor': [autor_value],
         'sentiment': [sentiment_value],
         'rangotitulo_encoded': [rango_titulo],
         'rangosubtitulo_encoded': [rango_subtitulo],
