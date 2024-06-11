@@ -63,18 +63,12 @@ try:
         }}
         .stButton > button:hover {{
             color: white;
-            background-color: black;
-            border-color: black;  /* Cambiar el color del borde a negro cuando se pasa el cursor por encima */
+            background-color: #008cff;
+            border-color: #008cff;  /* Cambiar el color del borde a negro cuando se pasa el cursor por encima */
         }}
         .stButton > button:active {{
-            color: #008cff;
-            background-color: white;
-            border: 2px solid #008cff;
-        }}
-        .stButton > button:focus {{
-            color: #008cff;
-            background-color: white;
-            border: 2px solid #008cff;
+            color: white;
+            background-color: #008cff;
         }}
         </style>
         """,
