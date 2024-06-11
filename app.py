@@ -346,7 +346,6 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 if st.button('Obtener recomendaciones'):
-    autor = int(autor.split()[0])
     try:
         modelo_clasificacion = modelo_clas(df)
         cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
