@@ -78,8 +78,6 @@ except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
 # Interfaz de usuario en Streamlit
-st.title('Sistema de Recomendación para Notas :book:')
-
 condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
 categoria = st.selectbox("Seleccione la categoria", options=condition_options)
 sentimiento = st.selectbox("Seleccione el sentimiento:", ["negativo", "neutral", "positivo"])
