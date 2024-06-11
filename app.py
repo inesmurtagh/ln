@@ -77,14 +77,15 @@ try:
 except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
-
 # Interfaz de usuario en Streamlit
+st.title('Sistema de Recomendación para Notas :book:')
+
 condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
 categoria = st.selectbox("Seleccione la categoria", options=condition_options)
-sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
+sentimiento = st.selectbox("Seleccione el sentimiento:", ["negativo", "neutral", "positivo"])
 titulo = st.text_input("Ingrese el título:")
 subtitulo = st.text_input("Ingrese el subtítulo:")
-autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
+autor = st.selectbox("Seleccione el tipo de autor:", ["0 (desconocido)", "1 (conocido)"])
 
 # Función para codificar 'categoria'
 def encode_categoria(categoria):
@@ -187,9 +188,15 @@ def modelo_clas(df):
 def preprocess_text(text):
     # División del texto en tokens por espacios en blanco
     tokens = text.split()
+
+    # Verificar si el archivo de stopwords existe
+    stopwords_path = "data/spanish"
+    if not os.path.exists(stopwords_path):
+        st.error(f"No se encontró el archivo de stopwords en {stopwords_path}.")
+        return tokens
     
     # Carga de stopwords en español desde el archivo CSV
-    stop_words_df = pd.read_csv("data/spanish", delimiter="\t", header=None)
+    stop_words_df = pd.read_csv(stopwords_path, delimiter="\t", header=None)
     stop_words = set(stop_words_df[0].tolist())
     
     # Eliminación de stopwords del texto
@@ -254,8 +261,10 @@ def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
     if np.isnan(pageviews_mean):
         return -np.inf,
 
+    noise = np.random.normal(0, df_cluster['pageviews'].std())
+
     if pageviews_mean > 0:
-        variation = ((pageviews_mean - benchmark_cluster) / benchmark_cluster) * 100
+        variation = ((pageviews_mean - benchmark_cluster) / benchmark_cluster) * 100 + noise
     else:
         variation = -np.inf
 
@@ -333,7 +342,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     stats.register("min", np.min)
     stats.register("max", np.max)
 
-    algorithms.eaSimple(population, toolbox, cxpb=0.5, mutpb=0.1, ngen=40, stats=stats, halloffame=hall_of_fame, verbose=True)
+    algorithms.eaSimple(population, toolbox, cxpb=0.5, mutpb=0.2, ngen=40, stats=stats, halloffame=hall_of_fame, verbose=True)
 
     best_ind = hall_of_fame[0]
     variacion = best_ind.fitness.values[0]
@@ -346,15 +355,16 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 if st.button('Obtener recomendaciones'):
+    autor = int(autor.split()[0])
     try:
         modelo_clasificacion = modelo_clas(df)
         cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
         estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
         st.write(f"Estrategia recomendada para el sentimiento: {de_encode_sentimiento(estrategia_recomendada[0][0])}")
+        st.write(f"Estrategia recomendada para el tipo de autor: {de_encode_autor(estrategia_recomendada[0][1])}")
         st.write(f"Estrategia recomendada para el titulo: {de_encode_rango(estrategia_recomendada[0][2])}")
         st.write(f"Estrategia recomendada para el subtitulo: {de_encode_rango(estrategia_recomendada[0][3])}")
         st.write(f"Estrategia recomendada para el pregunta: {de_encode_pregunta(estrategia_recomendada[0][4])}")
-    
     except ValueError as e:
         st.write(f"Error: {e}")
 
