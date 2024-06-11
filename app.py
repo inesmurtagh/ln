@@ -347,17 +347,14 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 if st.button('Obtener recomendaciones'):
     if not titulo:
         st.error('Por favor ingrese un título.')
-    elif not subtitulo:
-        st.warning('No se ingresó subtítulo.')
-        # Continuar con el procesamiento si no se ingresa subtítulo.
-        subtitulo = ""
-    try:
-        modelo_clasificacion = modelo_clas(df)
-        cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
-        estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
-        st.write(f"Estrategia recomendada para el sentimiento: {de_encode_sentimiento(estrategia_recomendada[0][0])}")
-        st.write(f"Estrategia recomendada para el titulo: {de_encode_rango(estrategia_recomendada[0][2])}")
-        st.write(f"Estrategia recomendada para el subtitulo: {de_encode_rango(estrategia_recomendada[0][3])}")
-        st.write(f"Estrategia recomendada para el pregunta: {de_encode_pregunta(estrategia_recomendada[0][4])}")
-    except ValueError as e:
-        st.write(f"Error: {e}")
+    else:
+        try:
+            modelo_clasificacion = modelo_clas(df)
+            cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
+            estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
+            st.write(f"Estrategia recomendada para el sentimiento: {de_encode_sentimiento(estrategia_recomendada[0][0])}")
+            st.write(f"Estrategia recomendada para el titulo: {de_encode_rango(estrategia_recomendada[0][2])}")
+            st.write(f"Estrategia recomendada para el subtitulo: {de_encode_rango(estrategia_recomendada[0][3])}")
+            st.write(f"Estrategia recomendada para el pregunta: {de_encode_pregunta(estrategia_recomendada[0][4])}")
+        except ValueError as e:
+            st.write(f"Error: {e}")
