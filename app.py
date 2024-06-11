@@ -78,7 +78,7 @@ condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles
 categoria = st.selectbox("Seleccione la categoria", options=condition_options)
 sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
 titulo = st.text_input("Ingrese el título:")
-subtitulo = st.text_input("Ingrese el subtítulo:")
+subtitulo = st.text_input("Ingrese el subtítulo (Opcional):")
 autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
 
 # Función para codificar 'categoria'
@@ -125,7 +125,6 @@ def de_encode_rango(rango):
         return 'Largo'
     else:
         return 'Mediano'
-
 
 # Función para decodificar 'sentimiento'
 def de_encode_sentimiento(sentimiento):
@@ -346,6 +345,12 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 if st.button('Obtener recomendaciones'):
+    if not titulo:
+        st.error('Por favor ingrese un título.')
+    elif not subtitulo:
+        st.warning('No se ingresó subtítulo.')
+        # Continuar con el procesamiento si no se ingresa subtítulo.
+        subtitulo = ""
     try:
         modelo_clasificacion = modelo_clas(df)
         cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
