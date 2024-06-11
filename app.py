@@ -16,10 +16,6 @@ from deap import base, creator, tools, algorithms
 import os
 import base64
 
-# Cargar el modelo K-Modes preentrenado
-with open("data/best_kmodes.pkl", "rb") as f:
-    kmodes_model = pickle.load(f)
-
 # CSS para el fondo y el color del texto
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
