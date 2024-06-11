@@ -353,7 +353,7 @@ if st.button('Obtener recomendaciones'):
     elif not titulo:
         st.error('Por favor ingrese un título.')
     elif not subtitulo:
-        st.error('Por favor ingrese un subtítulo.')
+        st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un subtítulo.</p>', unsafe_allow_html=True)
     else:
         try:
             modelo_clasificacion = modelo_clas(df)
@@ -365,4 +365,3 @@ if st.button('Obtener recomendaciones'):
             st.write(f"Estrategia recomendada para el pregunta: {de_encode_pregunta(estrategia_recomendada[0][4])}")
         except ValueError as e:
             st.write(f"Error: {e}")
-            
