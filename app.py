@@ -66,9 +66,6 @@ try:
             color: white;
             background-color: #008cff;
         }}
-        .css-1avcm0n {{
-            color: white !important;
-        }}
         </style>
         """,
         unsafe_allow_html=True
@@ -349,9 +346,9 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 
 if st.button('Obtener recomendaciones'):
     if not titulo and not subtitulo:
-        st.error('Por favor ingrese un título y un subtítulo.')
+        st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título y un subtítulo.</p>', unsafe_allow_html=True)
     elif not titulo:
-        st.error('Por favor ingrese un título.')
+        st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título.</p>', unsafe_allow_html=True)
     elif not subtitulo:
         st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un subtítulo.</p>', unsafe_allow_html=True)
     else:
