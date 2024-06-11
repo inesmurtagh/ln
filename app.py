@@ -43,7 +43,7 @@ try:
             color: white;
         }}
         .stSelectbox div[role="combobox"] > div {{
-            color: black;  /* para asegurar que el texto dentro de la caja select esté en negro */
+            color: #005bff;  /* para asegurar que el texto dentro de la caja select esté en negro */
         }}
         .stMarkdown {{
             color: white;
@@ -63,8 +63,8 @@ try:
         }}
         .stButton > button:hover {{
             color: white;
-            background-color: black;
-            border-color: black;  /* Cambiar el color del borde a negro cuando se pasa el cursor por encima */
+            background-color: #005bff;
+            border-color: #005bff;  /* Cambiar el color del borde a negro cuando se pasa el cursor por encima */
         }}
         .stButton > button:active {{
             color: white;
@@ -360,6 +360,3 @@ if st.button('Obtener recomendaciones'):
         st.write(f"Estrategia recomendada para el pregunta: {de_encode_pregunta(estrategia_recomendada[0][4])}")
     except ValueError as e:
         st.write(f"Error: {e}")
-
-# Para ejecutar:
-# streamlit run app.py
