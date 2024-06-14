@@ -238,6 +238,8 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
+    st.write(f"Tópico asignado: {topic}")  # Mostrar el tópico asignado
+
     # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
@@ -250,16 +252,17 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Predecir el cluster
     cluster = modelo_clasificacion.predict(input_data)
+    st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
-    sentimiento, tipo_autor, titulo, subtitulo, pregunta = individuo
+    sentimiento, tipo_autor, rangotitulo, rangosubtitulo, pregunta = individuo
 
     pageviews_mean = df_cluster[
         (df_cluster['sentiment'] == sentimiento) &
         (df_cluster['tipo_autor'] == tipo_autor) &
-        (df_cluster['rangotitulo_encoded'] == titulo) &
-        (df_cluster['rangosubtitulo_encoded'] == subtitulo) &
+        (df_cluster['rangotitulo_encoded'] == rangotitulo) &
+        (df_cluster['rangosubtitulo_encoded'] == rangosubtitulo) &
         (df_cluster['pregunta'] == pregunta)
     ]['pageviews'].mean()
 
@@ -367,10 +370,16 @@ def crear_mapa_calor(df_cluster):
         aggfunc=np.mean
     )
     plt.figure(figsize=(10, 6))
-    sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'})
-    plt.title("Mapa de Calor de Pageviews según Estrategias")
-    plt.xlabel('Sentimiento y Pregunta')
-    plt.ylabel('Rango Título y Rango Subtítulo')
+    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'})
+
+    # Cambiar el color del texto a blanco
+    heatmap.set_facecolor('none')  # Hacer transparente el fondo
+    for text in heatmap.get_yticklabels() + heatmap.get_xticklabels() + heatmap.texts:
+        text.set_color('white')
+
+    plt.title("Mapa de Calor de Pageviews según Estrategias", color='white')
+    plt.xlabel('Sentimiento y Pregunta', color='white')
+    plt.ylabel('Rango Título y Rango Subtítulo', color='white')
     st.pyplot(plt)
 
 if st.button('Obtener recomendaciones'):
