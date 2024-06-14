@@ -363,25 +363,30 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 def crear_mapa_calor(df_cluster):
+    # Crear una columna que combine las estrategias
+    df_cluster['combinacion'] = df_cluster.apply(lambda x: f"{x['sentiment']}-{x['tipo_autor']}-{x['rangotitulo_encoded']}-{x['rangosubtitulo_encoded']}-{x['pregunta']}", axis=1)
+
+    # Crear una tabla pivote basada en las combinaciones evaluadas
     pivot_table = df_cluster.pivot_table(
         values='pageviews', 
-        index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
-        columns=['sentiment', 'pregunta'], 
+        index=['combinacion'], 
         aggfunc=np.mean
-    )
-    plt.figure(figsize=(10, 6), facecolor='none')  # Hacer transparente el fondo de la figura
-    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'}, alpha=0.8)
+    ).reset_index()
+
+    # Crear una matriz de calor usando seaborn
+    plt.figure(figsize=(10, 6))
+    heatmap = sns.heatmap(pivot_table.pivot('combinacion', 'combinacion', 'pageviews'), cmap="YlOrRd", cbar_kws={'label': 'Pageviews'})
 
     # Cambiar el color del texto a blanco
-    heatmap.set_facecolor('none')  # Hacer transparente el fondo del mapa de calor
+    heatmap.set_facecolor('none')  # Hacer transparente el fondo
     heatmap.tick_params(colors='white')  # Cambiar el color de las etiquetas de los ejes a blanco
     cbar = heatmap.collections[0].colorbar
     cbar.ax.yaxis.set_tick_params(color='white')
     plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
 
     plt.title("Mapa de Calor de Pageviews según Estrategias", color='white')
-    plt.xlabel('Sentimiento y Pregunta', color='white')
-    plt.ylabel('Rango Título y Rango Subtítulo', color='white')
+    plt.xlabel('Combinaciones de Estrategias', color='white')
+    plt.ylabel('Combinaciones de Estrategias', color='white')
     st.pyplot(plt)
 
 if st.button('Obtener recomendaciones'):
