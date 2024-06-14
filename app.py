@@ -15,6 +15,7 @@ from sklearn.model_selection import train_test_split
 from deap import base, creator, tools, algorithms
 import os
 import base64
+import re
 
 # CSS para el fondo y el color del texto
 def get_base64_of_bin_file(bin_file):
@@ -174,6 +175,12 @@ def modelo_clas(df):
 
 # Función para pre-procesamiento del texto
 def preprocess_text(text):
+    # Eliminar URLs
+    text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
+    # Eliminar puntuaciones y caracteres especiales
+    text = re.sub(r'[^A-Za-z0-9\s]', '', text)
+    # Convertir a minúsculas
+    text = text.lower()
     # División del texto en tokens por espacios en blanco
     tokens = text.split()
 
@@ -188,7 +195,7 @@ def preprocess_text(text):
     stop_words = set(stop_words_df[0].tolist())
     
     # Eliminación de stopwords del texto
-    preprocessed_text = [token for token in tokens if token.lower() not in stop_words]
+    preprocessed_text = [token for token in tokens if token not in stop_words]
     
     return preprocessed_text
 
@@ -222,8 +229,12 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Predecir el tópico usando LDA
     texto_completo = titulo + " " + subtitulo
+    texto_completo = preprocess_text(texto_completo)
+    texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
+    st.write(f"Tópico asignado: {topic}")  # Mostrar el tópico asignado
+
     # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
@@ -236,6 +247,7 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Predecir el cluster
     cluster = modelo_clasificacion.predict(input_data)
+    st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
@@ -340,7 +352,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     pv_esperadas = benchmark_cluster * (1 + variacion / 100)
 
     peso_ponderado = len(df) / total_notas
-    variacion_ponderada = variacion * peso_ponderado
+    variacion_ponderada = variacion * peso_onderado
 
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas
