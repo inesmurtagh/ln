@@ -360,7 +360,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     variacion_ponderada = variacion * peso_ponderado
 
     estrategias_recomendadas.append(best_ind)    
-    return estrategias_recomendadas
+    return estrategias_recomendadas, valid_combinations
 
 def crear_mapa_calor(df_cluster, combinaciones_validas):
     # Crear una tabla pivote basada en las combinaciones evaluadas
@@ -388,7 +388,7 @@ if st.button('Obtener recomendaciones'):
         try:
             modelo_clasificacion = modelo_clas(df)
             cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
-            estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
+            estrategia_recomendada, valid_combinations = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
 
             tono = de_encode_sentimiento(estrategia_recomendada[0][0]).upper()
             rangotitulo = de_encode_rango(estrategia_recomendada[0][2]).upper()
