@@ -256,13 +256,13 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
-    sentimiento, tipo_autor, rangotitulo, rangosubtitulo, pregunta = individuo
+    sentimiento, tipo_autor, titulo, subtitulo, pregunta = individuo
 
     pageviews_mean = df_cluster[
         (df_cluster['sentiment'] == sentimiento) &
         (df_cluster['tipo_autor'] == tipo_autor) &
-        (df_cluster['rangotitulo_encoded'] == rangotitulo) &
-        (df_cluster['rangosubtitulo_encoded'] == rangosubtitulo) &
+        (df_cluster['rangotitulo_encoded'] == titulo) &
+        (df_cluster['rangosubtitulo_encoded'] == subtitulo) &
         (df_cluster['pregunta'] == pregunta)
     ]['pageviews'].mean()
 
@@ -360,18 +360,17 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     variacion_ponderada = variacion * peso_ponderado
 
     estrategias_recomendadas.append(best_ind)    
-    return estrategias_recomendadas, valid_combinations
+    return estrategias_recomendadas
 
-def crear_mapa_calor(df_cluster, combinaciones_validas):
-    # Crear una tabla pivote basada en las combinaciones evaluadas
-    pivot_table = df_cluster[df_cluster.apply(lambda row: (row['sentiment'], row['tipo_autor'], row['rangotitulo_encoded'], row['rangosubtitulo_encoded'], row['pregunta']) in combinaciones_validas, axis=1)].pivot_table(
+def crear_mapa_calor(df_cluster):
+    pivot_table = df_cluster.pivot_table(
         values='pageviews', 
         index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
         columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
     plt.figure(figsize=(12, 8))
-    sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'})
+    sns.heatmap(pivot_table, cmap="YlGnBu", cbar_kws={'label': 'Pageviews'})
     plt.title("Mapa de Calor de Pageviews según Estrategias")
     plt.xlabel('Sentimiento y Pregunta')
     plt.ylabel('Rango Título y Rango Subtítulo')
@@ -388,7 +387,7 @@ if st.button('Obtener recomendaciones'):
         try:
             modelo_clasificacion = modelo_clas(df)
             cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
-            estrategia_recomendada, valid_combinations = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
+            estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
 
             tono = de_encode_sentimiento(estrategia_recomendada[0][0]).upper()
             rangotitulo = de_encode_rango(estrategia_recomendada[0][2]).upper()
@@ -402,6 +401,6 @@ if st.button('Obtener recomendaciones'):
                 st.markdown("**Hace falta incluir una pregunta retórica.**")
 
             # Crear el mapa de calor
-            crear_mapa_calor(df, valid_combinations)
+            crear_mapa_calor(df)
         except ValueError as e:
             st.write(f"Error: {e}")
