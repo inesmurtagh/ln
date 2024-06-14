@@ -352,7 +352,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     pv_esperadas = benchmark_cluster * (1 + variacion / 100)
 
     peso_ponderado = len(df) / total_notas
-    variacion_ponderada = variacion * peso_onderado
+    variacion_ponderada = variacion * peso_ponderado
 
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas
