@@ -238,6 +238,8 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
+    st.write(f"Tópico asignado: {topic}")  # Mostrar el tópico asignado
+
     # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
@@ -250,16 +252,17 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Predecir el cluster
     cluster = modelo_clasificacion.predict(input_data)
+    st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
-    sentimiento, tipo_autor, titulo, subtitulo, pregunta = individuo
+    sentimiento, tipo_autor, rangotitulo, rangosubtitulo, pregunta = individuo
 
     pageviews_mean = df_cluster[
         (df_cluster['sentiment'] == sentimiento) &
         (df_cluster['tipo_autor'] == tipo_autor) &
-        (df_cluster['rangotitulo_encoded'] == titulo) &
-        (df_cluster['rangosubtitulo_encoded'] == subtitulo) &
+        (df_cluster['rangotitulo_encoded'] == rangotitulo) &
+        (df_cluster['rangosubtitulo_encoded'] == rangosubtitulo) &
         (df_cluster['pregunta'] == pregunta)
     ]['pageviews'].mean()
 
@@ -359,15 +362,16 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas
 
-def crear_mapa_calor(df_cluster):
-    pivot_table = df_cluster.pivot_table(
+def crear_mapa_calor(df_cluster, combinaciones_validas):
+    # Crear una tabla pivote basada en las combinaciones evaluadas
+    pivot_table = df_cluster[df_cluster.apply(lambda row: (row['sentiment'], row['tipo_autor'], row['rangotitulo_encoded'], row['rangosubtitulo_encoded'], row['pregunta']) in combinaciones_validas, axis=1)].pivot_table(
         values='pageviews', 
         index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
         columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
-    plt.figure(figsize=(10, 6))
-    sns.heatmap(pivot_table, cmap="YlGnBu", cbar_kws={'label': 'Pageviews'})
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'})
     plt.title("Mapa de Calor de Pageviews según Estrategias")
     plt.xlabel('Sentimiento y Pregunta')
     plt.ylabel('Rango Título y Rango Subtítulo')
@@ -398,6 +402,6 @@ if st.button('Obtener recomendaciones'):
                 st.markdown("**Hace falta incluir una pregunta retórica.**")
 
             # Crear el mapa de calor
-            crear_mapa_calor(df)
+            crear_mapa_calor(df, valid_combinations)
         except ValueError as e:
             st.write(f"Error: {e}")
