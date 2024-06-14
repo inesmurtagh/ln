@@ -79,8 +79,8 @@ except FileNotFoundError:
 condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
 categoria = st.selectbox("Seleccione la categoria", options=condition_options)
 sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
-titulo = st.text_input("Ingrese el título:")
-subtitulo = st.text_input("Ingrese el subtítulo:")
+titulo = st.text_area("Ingrese el título:")
+subtitulo = st.text_area("Ingrese el subtítulo:")
 autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
 
 # Función para codificar 'categoria'
@@ -233,6 +233,8 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
+    st.write(f"Tópico asignado: {topic}")  # Mostrar el tópico asignado
+
     # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
@@ -245,6 +247,7 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Predecir el cluster
     cluster = modelo_clasificacion.predict(input_data)
+    st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
