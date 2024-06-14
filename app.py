@@ -369,9 +369,16 @@ if st.button('Obtener recomendaciones'):
             modelo_clasificacion = modelo_clas(df)
             cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
             estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
-            st.write(f"Estrategia recomendada para el sentimiento: {de_encode_sentimiento(estrategia_recomendada[0][0])}")
-            st.write(f"Estrategia recomendada para el titulo: {de_encode_rango(estrategia_recomendada[0][2])}")
-            st.write(f"Estrategia recomendada para el subtitulo: {de_encode_rango(estrategia_recomendada[0][3])}")
-            st.write(f"Estrategia recomendada para el pregunta: {de_encode_pregunta(estrategia_recomendada[0][4])}")
+
+            tono = de_encode_sentimiento(estrategia_recomendada[0][0])
+            rangotitulo = de_encode_rango(estrategia_recomendada[0][2])
+            rangosubtitulo = de_encode_rango(estrategia_recomendada[0][3])
+            pregunta = de_encode_pregunta(estrategia_recomendada[0][4])
+
+            st.write(f"Para este tipo de nota se recomienda un tono {tono}, un título {rangotitulo}, con un subtítulo {rangosubtitulo}.")
+            if pregunta == 'Sin Pregunta':
+                st.write("No hace falta incluir una pregunta retórica.")
+            else:
+                st.write("Hace falta incluir una pregunta retórica.")
         except ValueError as e:
             st.write(f"Error: {e}")
