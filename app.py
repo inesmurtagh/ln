@@ -366,8 +366,8 @@ def crear_mapa_calor(df_cluster):
         columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
-    plt.figure(figsize=(12, 8))
-    sns.heatmap(pivot_table, annot=True, cmap="YlGnBu", fmt=".1f")
+    plt.figure(figsize=(10, 6))
+    sns.heatmap(pivot_table, cmap="YlGnBu", cbar_kws={'label': 'Pageviews'})
     plt.title("Mapa de Calor de Pageviews según Estrategias")
     plt.xlabel('Sentimiento y Pregunta')
     plt.ylabel('Rango Título y Rango Subtítulo')
