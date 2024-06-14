@@ -369,13 +369,15 @@ def crear_mapa_calor(df_cluster):
         columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
-    plt.figure(figsize=(10, 6))
-    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'})
+    plt.figure(figsize=(10, 6), facecolor='none')  # Hacer transparente el fondo de la figura
+    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'}, alpha=0.8)
 
     # Cambiar el color del texto a blanco
-    heatmap.set_facecolor('none')  # Hacer transparente el fondo
-    for text in heatmap.get_yticklabels() + heatmap.get_xticklabels() + heatmap.texts:
-        text.set_color('white')
+    heatmap.set_facecolor('none')  # Hacer transparente el fondo del mapa de calor
+    heatmap.tick_params(colors='white')  # Cambiar el color de las etiquetas de los ejes a blanco
+    cbar = heatmap.collections[0].colorbar
+    cbar.ax.yaxis.set_tick_params(color='white')
+    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
 
     plt.title("Mapa de Calor de Pageviews según Estrategias", color='white')
     plt.xlabel('Sentimiento y Pregunta', color='white')
