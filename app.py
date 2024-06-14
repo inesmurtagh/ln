@@ -238,8 +238,6 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
-    st.write(f"Tópico asignado: {topic}")  # Mostrar el tópico asignado
-
     # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
@@ -252,7 +250,6 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Predecir el cluster
     cluster = modelo_clasificacion.predict(input_data)
-    st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
@@ -365,15 +362,15 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 def crear_mapa_calor(df_cluster):
     pivot_table = df_cluster.pivot_table(
         values='pageviews', 
-        index=['sentiment', 'tipo_autor', 'rangotitulo_encoded'], 
-        columns=['rangosubtitulo_encoded', 'pregunta'], 
+        index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
+        columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
     plt.figure(figsize=(12, 8))
     sns.heatmap(pivot_table, annot=True, cmap="YlGnBu", fmt=".1f")
     plt.title("Mapa de Calor de Pageviews según Estrategias")
-    plt.xlabel('Subtítulo y Pregunta')
-    plt.ylabel('Sentimiento, Tipo de Autor y Título')
+    plt.xlabel('Sentimiento y Pregunta')
+    plt.ylabel('Rango Título y Rango Subtítulo')
     st.pyplot(plt)
 
 if st.button('Obtener recomendaciones'):
