@@ -33,10 +33,13 @@ try:
             background-size: cover;
             color: white;
         }}
-        .stSelectbox, .stTextInput, .stButton > button {{
+        .stSelectbox, .stTextArea, .stTextInput, .stButton > button {{
             color: white;
         }}
-        .stSelectbox label, .stTextInput label, .stButton > button {{
+        .stSelectbox label, .stTextArea label, .stTextInput label, .stButton > button {{
+            color: white;
+        }}
+        .stTextArea div[role="textbox"] > div {{
             color: white;
         }}
         .stSelectbox div[role="combobox"] > div {{
