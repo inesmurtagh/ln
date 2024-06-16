@@ -252,7 +252,7 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     cluster = modelo_clasificacion.predict(input_data)
     return cluster[0]
 
-def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
+def evaluar_individuo(individuo, df_cluster, benchmark_cluster, resultados):
     sentimiento, tipo_autor, rangotitulo, rangosubtitulo, pregunta = individuo
 
     pageviews_mean = df_cluster[
@@ -264,7 +264,7 @@ def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
     ]['pageviews'].mean()
 
     if np.isnan(pageviews_mean):
-        return -np.inf,
+        pageviews_mean = -np.inf
 
     noise = np.random.normal(0, df_cluster['pageviews'].std())
 
@@ -276,6 +276,16 @@ def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
     if variation > 0:
         variation = np.log1p(variation)
 
+    # Guardar resultados en el DataFrame
+    resultados.append({
+        'sentiment': sentimiento,
+        'tipo_autor': tipo_autor,
+        'rangotitulo': rangotitulo,
+        'rangosubtitulo': rangosubtitulo,
+        'pregunta': pregunta,
+        'pageviews': pageviews_mean
+    })
+
     return variation,
 
 # Función para algoritmos geneticos
@@ -284,6 +294,9 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     df = clusters[clusters['cluster'] == cluster_objetivo]
     benchmark_cluster = df['pageviews'].mean()
     estrategias_recomendadas = []
+
+    # DataFrame para guardar los resultados de las evaluaciones
+    resultados = []
     
     combination_counts = df.groupby(['sentiment', 'tipo_autor', 'rangotitulo_encoded', 'rangosubtitulo_encoded', 'pregunta']).size()
     percentil_25 = combination_counts.quantile(0.25)
@@ -318,7 +331,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
                      (toolbox.attr_sentimiento, toolbox.attr_tipo_autor, toolbox.attr_titulo, toolbox.attr_subtitulo, toolbox.attr_pregunta), n=1)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-    toolbox.register("evaluate", evaluar_individuo, df_cluster=df, benchmark_cluster=benchmark_cluster)
+    toolbox.register("evaluate", evaluar_individuo, df_cluster=df, benchmark_cluster=benchmark_cluster, resultados=resultados)
     toolbox.register("mate", tools.cxTwoPoint)
 
     def custom_mutate(individual, indpb):
@@ -358,7 +371,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     variacion_ponderada = variacion * peso_ponderado
 
     estrategias_recomendadas.append(best_ind)    
-    return estrategias_recomendadas, logbook
+    return estrategias_recomendadas, logbook, pd.DataFrame(resultados)
 
 def crear_mapa_calor(df_cluster):
     # Crear una tabla pivote basada en las estrategias
@@ -383,6 +396,35 @@ def crear_mapa_calor(df_cluster):
     plt.ylabel('Rango Título y Rango Subtítulo', color='white')
     st.pyplot(plt)
 
+def crear_mapa_calor_por_individuo(df_resultados):
+    df_resultados['sentiment'] = df_resultados['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
+    df_resultados['pregunta'] = df_resultados['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
+    df_resultados['rangotitulo'] = df_resultados['rangotitulo'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
+    df_resultados['rangosubtitulo'] = df_resultados['rangosubtitulo'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
+
+    pivot_table = df_resultados.pivot_table(
+        index=['sentiment', 'pregunta'],
+        columns=['rangotitulo', 'rangosubtitulo'],
+        values='pageviews',
+        aggfunc='mean'
+    )
+
+    plt.figure(figsize=(13, 5))
+    heatmap = sns.heatmap(pivot_table, cmap='YlOrRd', annot=False)
+    heatmap.set_facecolor('none')
+    heatmap.tick_params(colors='white')
+    cbar = heatmap.collections[0].colorbar
+    cbar.ax.yaxis.set_tick_params(color='white')
+    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+    
+    plt.xlabel('Rango Título y Rango Subtítulo', color='white')
+    plt.ylabel('Sentimiento y Pregunta', color='white')
+    plt.xticks(rotation=30, color='white')
+    plt.yticks(rotation=0, color='white')
+    plt.title("Mapa de Calor por Estrategia Evaluada", color='white')
+    plt.tight_layout()
+    st.pyplot(plt)
+
 if st.button('Obtener recomendaciones'):
     if not titulo and not subtitulo:
         st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título y un subtítulo.</p>', unsafe_allow_html=True)
@@ -394,7 +436,7 @@ if st.button('Obtener recomendaciones'):
         try:
             modelo_clasificacion = modelo_clas(df)
             cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
-            estrategia_recomendada, logbook = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
+            estrategia_recomendada, logbook, df_resultados = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
 
             tono = de_encode_sentimiento(estrategia_recomendada[0][0]).upper()
             rangotitulo = de_encode_rango(estrategia_recomendada[0][2]).upper()
@@ -407,7 +449,10 @@ if st.button('Obtener recomendaciones'):
             else:
                 st.markdown("**Hace falta incluir una pregunta retórica.**")
 
-            # Crear el mapa de calor
-            # crear_mapa_calor(df)
+            # Crear el mapa de calor basado en los clusters
+            crear_mapa_calor(df)
+
+            # Crear el mapa de calor basado en los resultados de las evaluaciones de los individuos
+            crear_mapa_calor_por_individuo(df_resultados)
         except ValueError as e:
             st.write(f"Error: {e}")
