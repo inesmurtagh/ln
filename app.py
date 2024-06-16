@@ -373,29 +373,6 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas, logbook, pd.DataFrame(resultados)
 
-def crear_mapa_calor(df_cluster):
-    # Crear una tabla pivote basada en las estrategias
-    pivot_table = df_cluster.pivot_table(
-        values='pageviews', 
-        index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
-        columns=['sentiment', 'pregunta'], 
-        aggfunc=np.mean
-    )
-    plt.figure(figsize=(10, 6), facecolor='none')  # Hacer transparente el fondo de la figura
-    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'}, alpha=0.8)
-
-    # Cambiar el color del texto a blanco
-    heatmap.set_facecolor('none')  # Hacer transparente el fondo del mapa de calor
-    heatmap.tick_params(colors='white')  # Cambiar el color de las etiquetas de los ejes a blanco
-    cbar = heatmap.collections[0].colorbar
-    cbar.ax.yaxis.set_tick_params(color='white')
-    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
-
-    plt.title("Mapa de Calor de Pageviews según Estrategias", color='white')
-    plt.xlabel('Sentimiento y Pregunta', color='white')
-    plt.ylabel('Rango Título y Rango Subtítulo', color='white')
-    st.pyplot(plt)
-
 def crear_mapa_calor_por_individuo(df_resultados):
     df_resultados['sentiment'] = df_resultados['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
     df_resultados['pregunta'] = df_resultados['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
@@ -409,14 +386,16 @@ def crear_mapa_calor_por_individuo(df_resultados):
         aggfunc='mean'
     )
 
-    plt.figure(figsize=(13, 5))
-    heatmap = sns.heatmap(pivot_table, cmap='YlOrRd', annot=False)
-    heatmap.set_facecolor('none')
-    heatmap.tick_params(colors='white')
+    plt.figure(figsize=(13, 5), facecolor='none')  # Hacer transparente el fondo de la figura
+    heatmap = sns.heatmap(pivot_table, cmap='YlOrRd', annot=False, cbar_kws={'label': 'Pageviews'})
+
+    # Cambiar el color del texto a blanco
+    heatmap.set_facecolor('none')  # Hacer transparente el fondo del mapa de calor
+    heatmap.tick_params(colors='white')  # Cambiar el color de las etiquetas de los ejes a blanco
     cbar = heatmap.collections[0].colorbar
     cbar.ax.yaxis.set_tick_params(color='white')
     plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
-    
+
     plt.xlabel('Rango Título y Rango Subtítulo', color='white')
     plt.ylabel('Sentimiento y Pregunta', color='white')
     plt.xticks(rotation=30, color='white')
@@ -448,9 +427,6 @@ if st.button('Obtener recomendaciones'):
                 st.markdown("**No hace falta incluir una pregunta retórica.**")
             else:
                 st.markdown("**Hace falta incluir una pregunta retórica.**")
-
-            # Crear el mapa de calor basado en los clusters
-            crear_mapa_calor(df)
 
             # Crear el mapa de calor basado en los resultados de las evaluaciones de los individuos
             crear_mapa_calor_por_individuo(df_resultados)
