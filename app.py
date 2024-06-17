@@ -71,7 +71,7 @@ try:
             border-color: #0056b3;
         }}
         .block-container {{
-            max-width: 100%;
+            max-width: 80%;
             padding-left: 1rem;
             padding-right: 1rem;
         }}
@@ -84,12 +84,13 @@ try:
             margin-right: 1rem;
         }}
         .css-1lcbmhc > div:last-child {{
-            margin-right: 0;
+            margin-right: 10%;
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
+    
 except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
@@ -327,10 +328,10 @@ def crear_mapa_calor(df_cluster):
 
     heatmap.set_facecolor('none')
     heatmap.tick_params(colors='white')
-    #cbar = heatmap.collections[0].colorbar
-    #cbar.ax.xaxis.set_tick_params(color='white')
-    #plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
-    #cbar.ax.set_position([0, -0.05, 1, 0.1])  # Reposicionar la barra de color
+    cbar = heatmap.collections[0].colorbar
+    cbar.ax.xaxis.set_tick_params(color='white')
+    plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
+    cbar.ax.set_position([0, -0.05, 0.8, 0.05])  # Reposicionar la barra de color
     
     plt.xticks(rotation=30)
     plt.xlabel('Sentimiento y Pregunta', color='white')
