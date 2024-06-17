@@ -316,6 +316,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     retorica = "con" if pregunta_rec.lower() != "sin pregunta" else "sin"
     foto_num = random.randint(1, 8)
     foto_url = f'https://raw.githubusercontent.com/inesmurtagh/ln/main/images/foto{foto_num}.png'
+    st.write(foto_url)
     st.markdown(
         f"""
         <div style="background-color: white; padding: 20px; position: relative; font-family: 'Open Sans', sans-serif;">
