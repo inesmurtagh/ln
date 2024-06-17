@@ -310,47 +310,19 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 
-def crear_imagen(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
-    # Crear una imagen en blanco
-    width, height = 1200, 600
-    background_color = "white"
-    line_color = "black"
-    
-    image = Image.new("RGB", (width, height), background_color)
-    draw = ImageDraw.Draw(image)
-    
-    # Dibujar líneas negras
-    draw.line((0, 0, width, 0), fill=line_color, width=3)
-    draw.line((0, height-1, width, height-1), fill=line_color, width=3)
-    
-    # Cargar y pegar la imagen de la derecha
-    img_url = "https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg"
-    try:
-        response = requests.get(img_url, stream=True)
-        img_derecha = Image.open(response.raw)
-        img_derecha = img_derecha.resize((300, 600))
-        image.paste(img_derecha, (width - 300, 0))
-    except Exception as e:
-        st.error(f"Error al cargar la imagen: {e}")
-    
-    # Añadir el texto
-    try:
-        font_title = ImageFont.truetype("arialbd.ttf", 32)
-        font_subtitle = ImageFont.truetype("arial.ttf", 24)
-        font_text = ImageFont.truetype("arial.ttf", 20)
-    except IOError:
-        font_title = ImageFont.load_default()
-        font_subtitle = ImageFont.load_default()
-        font_text = ImageFont.load_default()
-    
-    draw.text((10, 10), f"Categoría: {categoria}", fill=line_color, font=font_text)
-    draw.text((10, 70), f"Título: {titulo_rec}", fill=line_color, font=font_title)
-    draw.text((10, 130), f"Subtítulo: {subtitulo_rec}", fill=line_color, font=font_subtitle)
-    draw.text((10, 190), f"Sentimiento: {tono_rec}", fill=line_color, font=font_text)
-    draw.text((10, 250), f"Incluir pregunta: {pregunta_rec}", fill=line_color, font=font_text)
-    draw.text((10, height - 50), f"Escrito por: {autor}", fill=line_color, font=font_text)
-    
-    return image
+def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
+    st.markdown(
+        f"""
+        <div style="background-color: white; padding: 20px; border: 1px solid black;">
+            <h2 style='font-size: 24px;'>{titulo_rec}</h2>
+            <h3 style='font-size: 20px; color: grey;'>{subtitulo_rec}</h3>
+            <p style='font-size: 18px;'>Sentimiento: {tono_rec}</p>
+            <p style='font-size: 18px;'>Incluir pregunta: {pregunta_rec}</p>
+            <p style='font-size: 16px; color: grey;'>Categoría: {categoria} <br> Por {autor}</p>
+            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; float: right;'>
+        </div>
+        """, unsafe_allow_html=True
+    )
 
 # Columna derecha: respuestas
 with col2:
@@ -379,9 +351,9 @@ with col2:
                     st.markdown("**No hace falta incluir una pregunta retórica.**")
                 else:
                     st.markdown("**Hace falta incluir una pregunta retórica.**")
-
-                imagen = crear_imagen(categoria, autor, rangotitulo, rangosubtitulo, tono, pregunta)
-                st.image(imagen, caption='Simulación de la Nota')
+        
+            # Mostrar la noticia formateada
+            mostrar_noticia(categoria, autor, rangotitulo, rangosubtitulo, tono, pregunta)
 
             except ValueError as e:
                 st.write(f"Error: {e}")
