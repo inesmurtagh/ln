@@ -313,14 +313,20 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
     st.markdown(
         f"""
-        <div style="background-color: white; padding: 20px; border: 1px solid black;">
-            <p style='font-size: 18px; color: grey;'>{categoria.upper()}</p>
-            <h2 style='font-size: 24px;'>Titulo: {titulo_rec}</h2>
-            <h3 style='font-size: 20px; color: grey;'>Subtitulo: {subtitulo_rec}</h3>
-            <p style='font-size: 18px;'>Sentimiento: {tono_rec}</p>
-            <p style='font-size: 18px;'>Incluir pregunta: {pregunta_rec}</p>
-            <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
-            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; float: right;'>
+        <div style="background-color: white; padding: 20px; border: 1px solid black; position: relative;">
+            <div style="border-bottom: 2px solid black; padding-bottom: 5px;">
+                <p style='font-size: 18px; color: grey;'>{categoria.upper()}</p>
+            </div>
+            <div style="padding-top: 10px;">
+                <h2 style='font-size: 24px;'>Titulo: {titulo_rec}</h2>
+                <h3 style='font-size: 20px; color: grey;'>Subtitulo: {subtitulo_rec}</h3>
+                <p style='font-size: 18px;'>Sentimiento: {tono_rec}</p>
+                <p style='font-size: 18px;'>Incluir pregunta: {pregunta_rec}</p>
+                <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
+            </div>
+            <div style="border-top: 2px solid black; position: absolute; bottom: 0; width: 100%; padding-top: 5px;">
+            </div>
+            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; float: right; margin-top: -300px;'>
         </div>
         """, unsafe_allow_html=True
     )
@@ -353,7 +359,9 @@ with col2:
                 else:
                     st.markdown("**Hace falta incluir una pregunta retórica.**")
         
-                # Mostrar la noticia formateada
+                # Mostrar la noticia formateada    
+                st.write("")
+                st.write("") 
                 mostrar_noticia(categoria, autor, rangotitulo, rangosubtitulo, tono, pregunta)
 
             except ValueError as e:
