@@ -81,10 +81,10 @@ try:
         }}
         .css-1lcbmhc > div {{
             flex: 1;
-            margin-right: 5rem;  /* Adjust the right margin for space between columns */
+            margin-right: 10%;  /* Adjust the right margin for space between columns */
         }}
         .css-1lcbmhc > div:last-child {{
-            margin-right: 1rem;
+            margin-right: 10%;
         }}
         </style>
         """,
