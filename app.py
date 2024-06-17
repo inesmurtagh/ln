@@ -311,7 +311,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 
 def crear_imagen(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
     # Crear una imagen en blanco
-    width, height = 800, 400
+    width, height = 1200, 600
     background_color = "white"
     line_color = "black"
     
@@ -327,23 +327,27 @@ def crear_imagen(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta
     try:
         response = requests.get(img_url, stream=True)
         img_derecha = Image.open(response.raw)
-        img_derecha = img_derecha.resize((200, height))
-        image.paste(img_derecha, (width - 200, 0))
+        img_derecha = img_derecha.resize((300, 600))
+        image.paste(img_derecha, (width - 300, 0))
     except Exception as e:
         st.error(f"Error al cargar la imagen: {e}")
     
     # Añadir el texto
     try:
-        font = ImageFont.truetype("arial.ttf", 20)
+        font_title = ImageFont.truetype("arialbd.ttf", 32)
+        font_subtitle = ImageFont.truetype("arial.ttf", 24)
+        font_text = ImageFont.truetype("arial.ttf", 20)
     except IOError:
-        font = ImageFont.load_default()
+        font_title = ImageFont.load_default()
+        font_subtitle = ImageFont.load_default()
+        font_text = ImageFont.load_default()
     
-    draw.text((10, 10), f"Categoría: {categoria}", fill=line_color, font=font)
-    draw.text((10, 50), f"Título: {titulo_rec}", fill=line_color, font=font)
-    draw.text((10, 90), f"Subtítulo: {subtitulo_rec}", fill=line_color, font=font)
-    draw.text((10, 130), f"Sentimiento: {tono_rec}", fill=line_color, font=font)
-    draw.text((10, 170), f"Incluir pregunta: {pregunta_rec}", fill=line_color, font=font)
-    draw.text((10, height - 30), f"Escrito por: {autor}", fill=line_color, font=font)
+    draw.text((10, 10), f"Categoría: {categoria}", fill=line_color, font=font_text)
+    draw.text((10, 70), f"Título: {titulo_rec}", fill=line_color, font=font_title)
+    draw.text((10, 130), f"Subtítulo: {subtitulo_rec}", fill=line_color, font=font_subtitle)
+    draw.text((10, 190), f"Sentimiento: {tono_rec}", fill=line_color, font=font_text)
+    draw.text((10, 250), f"Incluir pregunta: {pregunta_rec}", fill=line_color, font=font_text)
+    draw.text((10, height - 50), f"Escrito por: {autor}", fill=line_color, font=font_text)
     
     return image
 
