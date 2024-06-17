@@ -318,14 +318,13 @@ def crear_mapa_calor(df_cluster):
         aggfunc=np.mean
     )
     plt.figure(figsize=(9, 7), facecolor='none')
-    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'orientation': 'horizontal'}, alpha=0.8)
+    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", alpha=0.8)
 
     heatmap.set_facecolor('none')
     heatmap.tick_params(colors='white')
     cbar = heatmap.collections[0].colorbar
     cbar.ax.xaxis.set_tick_params(color='white')
     plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
-    cbar.ax.set_position([0, -0.01, 0.8, 0.1])  # Reposicionar la barra de color
     
     plt.xticks(rotation=30)
     plt.xlabel('Sentimiento y Pregunta', color='white')
