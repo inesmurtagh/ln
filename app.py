@@ -49,7 +49,7 @@ try:
         }}
         .stMarkdown {{
             color: white;
-            line-height: 1.15; /* Adjust line height for markdown */
+            line-height: 1; /* Adjust line height for markdown */
         }}
         header {{
             visibility: hidden;
@@ -320,13 +320,13 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <p style='font-size: 18px; color: black; font-weight: bold;'>{categoria.upper()}</p>
             </div>
             <div style="padding-top: 10px;">
-                <h2 style='font-size: 24px;'>Titulo: {titulo_rec}</h2>
-                <h3 style='font-size: 20px; color: grey;'>Subtitulo: {subtitulo_rec}</h3>
+                <h2 style='font-size: 24px;'>Título: {titulo_rec}</h2>
+                <h3 style='font-size: 20px; color: grey;'>Subtítulo: {subtitulo_rec}</h3>
                 <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: black;'>Agregar un tono {tono_rec} y {retorica} pregunta retórica</p>
                 <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             </div>
-            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; height: auto; position: absolute; right: 15px; top: 80px;'>
+            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 200px; height: auto; position: absolute; right: 20px; top: 70px;'>
         </div>
         """, unsafe_allow_html=True
     )
