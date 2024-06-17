@@ -77,6 +77,8 @@ try:
 except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
+condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
+
 def encode_categoria(categoria):
     mapping = {
         'Autos': 0, 'Construcción y Diseño': 1, 'Deportes': 2, 'Edición impresa': 3, 
@@ -86,7 +88,7 @@ def encode_categoria(categoria):
     return mapping.get(categoria, -1)
 
 def encode_rango(rango):
-    mapping = {'Corto': 0, 'Mediano': 2, 'Largo': 1}
+    mapping = {'Corto': 0, 'Mediano': 1, 'Largo': 2}
     return mapping.get(rango, -1)
 
 def de_encode_rango(rango):
@@ -345,7 +347,5 @@ with col1:
                 else:
                     st.markdown("**Hace falta incluir una pregunta retórica.**")
 
-                with col2:
-                    crear_mapa_calor(df)
-            except ValueError as e:
-                st.write(f"Error: {e}")
+with col2:
+    crear_mapa_calor(df)
