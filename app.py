@@ -189,8 +189,6 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
-    st.write(f"Tópico asignado: {topic}")
-
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
         'tipo_autor': [autor_value],
@@ -201,7 +199,6 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     })
 
     cluster = modelo_clasificacion.predict(input_data)
-    st.write(f"Cluster asignado: {cluster[0]}")
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
@@ -337,6 +334,7 @@ def crear_mapa_calor(df_cluster):
 
 # Columna derecha: respuestas
 with col2:
+    st.write("")
     if st.button('Obtener recomendaciones'):
         if not titulo and not subtitulo:
             st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título y un subtítulo.</p>', unsafe_allow_html=True)
