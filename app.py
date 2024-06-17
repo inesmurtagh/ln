@@ -78,6 +78,11 @@ except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
 condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
+categoria = st.selectbox("Seleccione la categoria", options=condition_options)
+sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
+titulo = st.text_area("Ingrese el título:")
+subtitulo = st.text_area("Ingrese el subtítulo:")
+autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
 
 def encode_categoria(categoria):
     mapping = {
@@ -88,7 +93,7 @@ def encode_categoria(categoria):
     return mapping.get(categoria, -1)
 
 def encode_rango(rango):
-    mapping = {'Corto': 0, 'Mediano': 1, 'Largo': 2}
+    mapping = {'Corto': 0, 'Mediano': 2, 'Largo': 1}
     return mapping.get(rango, -1)
 
 def de_encode_rango(rango):
@@ -299,55 +304,45 @@ def crear_mapa_calor(df_cluster):
         columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
-    plt.figure(figsize=(10, 6), facecolor='none')
-    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'orientation': 'horizontal', 'label': 'Pageviews'}, alpha=0.8)
+    plt.figure(figsize=(9, 7), facecolor='none')
+    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'orientation': 'horizontal'}, alpha=0.8)
 
     heatmap.set_facecolor('none')
     heatmap.tick_params(colors='white')
     cbar = heatmap.collections[0].colorbar
     cbar.ax.xaxis.set_tick_params(color='white')
     plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
-    cbar.ax.set_position([0.2, -0.15, 0.6, 0.02])  # Reposicionar la barra de color
+    cbar.ax.set_position([0, -0.05, 1, 0.1])  # Reposicionar la barra de color
     
     plt.xticks(rotation=30)
     plt.xlabel('Sentimiento y Pregunta', color='white')
     plt.ylabel('Rango Título y Rango Subtítulo', color='white')
     st.pyplot(plt)
 
-# Crear columnas para el layout
-col1, col2 = st.columns([2, 3])
+if st.button('Obtener recomendaciones'):
+    if not titulo and not subtitulo:
+        st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título y un subtítulo.</p>', unsafe_allow_html=True)
+    elif not titulo:
+        st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título.</p>', unsafe_allow_html=True)
+    elif not subtitulo:
+        st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un subtítulo.</p>', unsafe_allow_html=True)
+    else:
+        try:
+            modelo_clasificacion = modelo_clas(df)
+            cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
+            estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
 
-with col1:
-    categoria = st.selectbox("Seleccione la categoria", options=condition_options)
-    sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
-    titulo = st.text_area("Ingrese el título:")
-    subtitulo = st.text_area("Ingrese el subtítulo:")
-    autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
-    if st.button('Obtener recomendaciones'):
-        if not titulo and not subtitulo:
-            st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título y un subtítulo.</p>', unsafe_allow_html=True)
-        elif not titulo:
-            st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título.</p>', unsafe_allow_html=True)
-        elif not subtitulo:
-            st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un subtítulo.</p>', unsafe_allow_html=True)
-        else:
-            try:
-                modelo_clasificacion = modelo_clas(df)
-                cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
-                estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
+            tono = de_encode_sentimiento(estrategia_recomendada[0][0]).upper()
+            rangotitulo = de_encode_rango(estrategia_recomendada[0][2]).upper()
+            rangosubtitulo = de_encode_rango(estrategia_recomendada[0][3]).upper()
+            pregunta = de_encode_pregunta(estrategia_recomendada[0][4])
 
-                tono = de_encode_sentimiento(estrategia_recomendada[0][0]).upper()
-                rangotitulo = de_encode_rango(estrategia_recomendada[0][2]).upper()
-                rangosubtitulo = de_encode_rango(estrategia_recomendada[0][3]).upper()
-                pregunta = de_encode_pregunta(estrategia_recomendada[0][4])
+            st.markdown(f"Para este tipo de nota se recomienda un tono **{tono}**, un título **{rangotitulo}**, con un subtítulo **{rangosubtitulo}**.")
+            if pregunta == 'Sin Pregunta':
+                st.markdown("**No hace falta incluir una pregunta retórica.**")
+            else:
+                st.markdown("**Hace falta incluir una pregunta retórica.**")
 
-                st.markdown(f"Para este tipo de nota se recomienda un tono **{tono}**, un título **{rangotitulo}**, con un subtítulo **{rangosubtitulo}**.")
-                if pregunta == 'Sin Pregunta':
-                    st.markdown("**No hace falta incluir una pregunta retórica.**")
-                else:
-                    st.markdown("**Hace falta incluir una pregunta retórica.**")
-
-                with col2:
-                    crear_mapa_calor(df)
-            except ValueError as e:
-                st.write(f"Error: {e}")
+            crear_mapa_calor(df)
+        except ValueError as e:
+            st.write(f"Error: {e}")
