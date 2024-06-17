@@ -319,7 +319,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
             <div style="border-bottom: 2px solid black; margin-bottom: 1px;">
                 <p style='font-size: 18px; color: black; font-weight: bold;'>{categoria.upper()}</p>
             </div>
-            <div style="padding-top: 10px;">
+            <div style="padding-top: 10px; line-height: 1.2;">
                 <h2 style='font-size: 24px; margin-bottom: 0;'>Titulo: {titulo_rec}</h2>
                 <h3 style='font-size: 20px; color: grey; margin-top: 0;'>Subtitulo: {subtitulo_rec}</h3>
                 <p style='font-size: 16px; color: white;'>espacio</p>
@@ -330,6 +330,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
         </div>
         """, unsafe_allow_html=True
     )
+
 
 # Columna derecha: respuestas
 with col2:
