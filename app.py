@@ -315,13 +315,13 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     retorica = "con" if pregunta_rec.lower() != "sin pregunta" else "sin"
     st.markdown(
         f"""
-        <div style="background-color: white; padding: 20px; position: relative; font-family: 'Lora', serif;">
+        <div style="background-color: white; padding: 20px; position: relative; font-family: 'Merriweather', serif;">
             <div style="border-bottom: 1px solid black; margin-bottom: 1px;">
-                <p style='font-size: 18px; color: black; font-weight: bold;'>{categoria.upper()}</p>
+                <p style='font-size: 18px; color: black;'>{categoria.upper()}</p>
             </div>
             <div style="padding-top: 1px; line-height: 1;">
-                <h2 style='font-size: 22px; margin-bottom: 0;'>Titulo: {titulo_rec}</h2>
-                <h2 style='font-size: 20px; color: grey; margin-top: 0;'>Subtitulo: {subtitulo_rec}</h2>
+                <p style='font-size: 24px; margin-bottom: 0; font-weight: bold;'>Titulo: {titulo_rec}</p>
+                <p style='font-size: 22px; color: grey; margin-top: 0; font-weight: bold;'>Subtitulo: {subtitulo_rec}</p>
                 <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: black;'>Agregar un tono {tono_rec}, {retorica} pregunta retórica</p>
                 <p style='font-size: 16px; color: white;'>espacio</p>
