@@ -326,7 +326,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <p style='font-size: 16px; color: black;'>Agregar un tono {tono_rec} y {retorica} pregunta retórica</p>
                 <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             </div>
-            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 200px; height: auto; position: absolute; right: 20px; top: 70px;'>
+            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: auto; height: 200px; position: absolute; right: 20px; top: 70px;'>
         </div>
         """, unsafe_allow_html=True
     )
