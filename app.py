@@ -72,8 +72,8 @@ try:
         }}
         .block-container {{
             max-width: 80%;
-            padding-left: 1rem;
-            padding-right: 1rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
         }}
         .css-1lcbmhc {{
             display: flex;
@@ -81,7 +81,7 @@ try:
         }}
         .css-1lcbmhc > div {{
             flex: 1;
-            margin-right: 1rem;
+            margin-right: 2rem;
         }}
         </style>
         """,
