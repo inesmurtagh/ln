@@ -324,7 +324,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <p style='font-size: 18px;'>Incluir pregunta: {pregunta_rec}</p>
                 <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             </div>
-            <div style="border-top: 2px solid black; position: absolute; bottom: 0; width: 100%; padding-top: 5px;">
+            <div style="border-top: 2px solid black; position: absolute; bottom: 0; width: 100%; padding-top: 1px;">
             </div>
             <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; height: auto; position: absolute; right: 20px; top: 20px;'>
         </div>
