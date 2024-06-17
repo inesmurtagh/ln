@@ -297,10 +297,12 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 def crear_mapa_calor(df_cluster):
     df_cluster['sentiment'] = df_cluster['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
     df_cluster['pregunta'] = df_cluster['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
+    df_cluster['rangotitulo_encoded'] = df_cluster['rangotitulo_encoded'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
+    df_cluster['rangosubtitulo_encoded'] = df_cluster['rangosubtitulo_encoded'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
     
     pivot_table = df_cluster.pivot_table(
         values='pageviews', 
-        index=['rangotitulo', 'rangosubtitulo'], 
+        index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
         columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
@@ -312,7 +314,9 @@ def crear_mapa_calor(df_cluster):
     cbar = heatmap.collections[0].colorbar
     cbar.ax.xaxis.set_tick_params(color='white')
     plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
-
+    cbar.ax.set_position([0.2, -0.15, 0.6, 0.02])  # Reposicionar la barra de color
+    
+    plt.xticks(rotation=30)
     plt.xlabel('Sentimiento y Pregunta', color='white')
     plt.ylabel('Rango Título y Rango Subtítulo', color='white')
     st.pyplot(plt)
