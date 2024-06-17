@@ -88,7 +88,7 @@ except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
 # Dividir la página en dos columnas
-col1, col2 = st.columns(2, gap="medium")
+col1, col2 = st.columns(2, gap="large")
 
 
 # Columna izquierda: entrada del usuario
