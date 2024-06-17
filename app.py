@@ -71,7 +71,7 @@ try:
             border-color: #0056b3;
         }}
         .block-container {{
-            max-width: 80%;
+            max-width: 100%;
             padding-left: 1rem;
             padding-right: 1rem;
         }}
@@ -81,16 +81,15 @@ try:
         }}
         .css-1lcbmhc > div {{
             flex: 1;
-            margin-right: 1rem;
+            margin-right: 2rem;  /* Adjust the right margin for space between columns */
         }}
         .css-1lcbmhc > div:last-child {{
-            margin-right: 10%;
+            margin-right: 0;
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
-    
 except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
@@ -195,6 +194,8 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
+    st.write(f"Tópico asignado: {topic}")
+
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
         'tipo_autor': [autor_value],
@@ -205,6 +206,7 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     })
 
     cluster = modelo_clasificacion.predict(input_data)
+    st.write(f"Cluster asignado: {cluster[0]}")
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
@@ -331,7 +333,7 @@ def crear_mapa_calor(df_cluster):
     cbar = heatmap.collections[0].colorbar
     cbar.ax.xaxis.set_tick_params(color='white')
     plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
-    cbar.ax.set_position([0, -0.05, 0.8, 0.05])  # Reposicionar la barra de color
+    cbar.ax.set_position([0, -0.05, 1, 0.1])  # Reposicionar la barra de color
     
     plt.xticks(rotation=30)
     plt.xlabel('Sentimiento y Pregunta', color='white')
