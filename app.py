@@ -311,6 +311,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 
 
 def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
+    tono_rec = tono_rec.lower()
     retorica = "con" if pregunta_rec.lower() != "sin pregunta" else "sin"
     st.markdown(
         f"""
@@ -321,9 +322,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
             <div style="padding-top: 10px;">
                 <h2 style='font-size: 24px;'>Titulo: {titulo_rec}</h2>
                 <h3 style='font-size: 20px; color: grey;'>Subtitulo: {subtitulo_rec}</h3>
-                <p style='font-size: 18px; color: grey;'>Agregar un tono {tono_rec} y {retorica} pregunta retórica</p>
-                <p style='font-size: 18px; color: grey;'>Sentimiento: {tono_rec}</p>
-                <p style='font-size: 18px; color: grey;'>Incluir pregunta: {pregunta_rec}</p>
+                <p style='font-size: 16px; color: black;'>Agregar un tono {tono_rec} y {retorica} pregunta retórica</p>
                 <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             </div>
             <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; height: auto; position: absolute; right: 20px; top: 70px;'>
