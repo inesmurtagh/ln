@@ -315,7 +315,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     retorica = "con" if pregunta_rec.lower() != "sin pregunta" else "sin"
     st.markdown(
         f"""
-        <div style="background-color: white; padding: 20px; position: relative; font-family: 'Open Sans';">
+        <div style="background-color: white; padding: 20px; position: relative; font-family: 'Open Sans', sans-serif;">
             <div style="border-bottom: 1px solid black; margin-bottom: 1px;">
                 <p style='font-size: 18px; color: black;'>{categoria.upper()}</p>
             </div>
