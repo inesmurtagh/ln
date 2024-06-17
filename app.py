@@ -314,7 +314,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     st.markdown(
         f"""
         <div style="background-color: white; padding: 20px; border: 1px solid black; position: relative;">
-            <div style="border-bottom: 2px solid black; padding-bottom: 5px;">
+            <div style="border-bottom: 2px solid black; padding-bottom: 5px; margin-bottom: 10px;">
                 <p style='font-size: 18px; color: grey;'>{categoria.upper()}</p>
             </div>
             <div style="padding-top: 10px;">
@@ -326,10 +326,11 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
             </div>
             <div style="border-top: 2px solid black; position: absolute; bottom: 0; width: 100%; padding-top: 5px;">
             </div>
-            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; float: right; margin-top: -300px;'>
+            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; height: auto; position: absolute; right: 20px; top: 20px;'>
         </div>
         """, unsafe_allow_html=True
     )
+
 
 # Columna derecha: respuestas
 with col2:
