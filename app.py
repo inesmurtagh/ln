@@ -18,6 +18,7 @@ import base64
 import re
 import seaborn as sns
 import matplotlib.pyplot as plt
+from PIL import Image, ImageDraw, ImageFont
 
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
