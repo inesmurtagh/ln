@@ -308,6 +308,45 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas
 
+
+def crear_imagen(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
+    # Crear una imagen en blanco
+    width, height = 800, 400
+    background_color = "white"
+    line_color = "black"
+    
+    image = Image.new("RGB", (width, height), background_color)
+    draw = ImageDraw.Draw(image)
+    
+    # Dibujar líneas negras
+    draw.line((0, 0, width, 0), fill=line_color, width=3)
+    draw.line((0, height-1, width, height-1), fill=line_color, width=3)
+    
+    # Cargar y pegar la imagen de la derecha
+    #img_url = ""  # Cambia esto a tu URL
+    img_url = get_base64_of_bin_file('images/portada.jpg')
+
+    response = requests.get(img_url, stream=True)
+    img_derecha = Image.open(response.raw)
+    img_derecha = img_derecha.resize((200, height))
+    image.paste(img_derecha, (width - 200, 0))
+    
+    # Añadir el texto
+    try:
+        font = ImageFont.truetype("arial.ttf", 20)
+    except IOError:
+        font = ImageFont.load_default()
+    
+    draw.text((10, 10), f"Categoría: {categoria}", fill=line_color, font=font)
+    draw.text((10, 50), f"Título: {titulo_rec}", fill=line_color, font=font)
+    draw.text((10, 90), f"Subtítulo: {subtitulo_rec}", fill=line_color, font=font)
+    draw.text((10, 130), f"Sentimiento: {tono_rec}", fill=line_color, font=font)
+    draw.text((10, 170), f"Incluir pregunta: {pregunta_rec}", fill=line_color, font=font)
+    draw.text((10, height - 30), f"Escrito por: {autor}", fill=line_color, font=font)
+    
+    return image
+
+
 # Columna derecha: respuestas
 with col2:
     st.write("")
@@ -335,6 +374,9 @@ with col2:
                     st.markdown("**No hace falta incluir una pregunta retórica.**")
                 else:
                     st.markdown("**Hace falta incluir una pregunta retórica.**")
+
+                imagen = crear_imagen(categoria, autor, rangotitulo, rangosubtitulo, tono, pregunta)
+                st.image(imagen, caption='Simulación de la Nota')
 
             except ValueError as e:
                 st.write(f"Error: {e}")
