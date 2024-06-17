@@ -78,17 +78,18 @@ try:
         .css-1lcbmhc {{
             display: flex;
             justify-content: space-between;
-            gap: "medium";  /* Add gap between columns */
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
+    
 except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
 # Dividir la página en dos columnas
-col1, col2 = st.columns(2)
+col1, col2 = st.columns(2, gap="medium")
+
 
 # Columna izquierda: entrada del usuario
 with col1:
