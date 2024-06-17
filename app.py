@@ -70,6 +70,19 @@ try:
             background-color: #0056b3;
             border-color: #0056b3;
         }}
+        .block-container {{
+            max-width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }}
+        .css-1lcbmhc {{
+            display: flex;
+            justify-content: space-between;
+        }}
+        .css-1lcbmhc > div {{
+            flex: 1;
+            margin-right: 1rem;
+        }}
         </style>
         """,
         unsafe_allow_html=True
@@ -78,7 +91,7 @@ except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
 # Dividir la página en dos columnas
-col1, col2 = st.columns([1, 1], gap="large")
+col1, col2 = st.columns(2)
 
 # Columna izquierda: entrada del usuario
 with col1:
