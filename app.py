@@ -323,7 +323,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <p style='font-size: 24px; color: black; margin-top: 10px; font-weight: bold;'>Título: {titulo_rec}</p>
                 <p style='font-size: 22px; color: grey; font-weight: bold;'>Subtítulo: {subtitulo_rec}</p>
                 <p style='font-size: 16px; color: white;'>espacio</p>
-                <p style='font-size: 16px; color: dark grey;'>Agregar un tono {tono_rec}, {retorica} pregunta retórica</p>
+                <p style='font-size: 16px; color: #A9A9A9;'>Agregar un tono {tono_rec}, {retorica} pregunta retórica</p>
                 <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             </div>
