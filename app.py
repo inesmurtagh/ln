@@ -335,6 +335,7 @@ def crear_mapa_calor(df_cluster):
 # Columna derecha: respuestas
 with col2:
     st.write("")
+    st.write("")
     if st.button('Obtener recomendaciones'):
         if not titulo and not subtitulo:
             st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título y un subtítulo.</p>', unsafe_allow_html=True)
