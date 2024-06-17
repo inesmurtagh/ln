@@ -309,7 +309,6 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas
 
-
 def crear_imagen(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
     # Crear una imagen en blanco
     width, height = 800, 400
@@ -324,13 +323,14 @@ def crear_imagen(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta
     draw.line((0, height-1, width, height-1), fill=line_color, width=3)
     
     # Cargar y pegar la imagen de la derecha
-    #img_url = ""  # Cambia esto a tu URL
-    img_url = get_base64_of_bin_file('images/portada.jpg')
-
-    response = requests.get(img_url, stream=True)
-    img_derecha = Image.open(response.raw)
-    img_derecha = img_derecha.resize((200, height))
-    image.paste(img_derecha, (width - 200, 0))
+    img_url = "https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg"
+    try:
+        response = requests.get(img_url, stream=True)
+        img_derecha = Image.open(response.raw)
+        img_derecha = img_derecha.resize((200, height))
+        image.paste(img_derecha, (width - 200, 0))
+    except Exception as e:
+        st.error(f"Error al cargar la imagen: {e}")
     
     # Añadir el texto
     try:
@@ -346,7 +346,6 @@ def crear_imagen(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta
     draw.text((10, height - 30), f"Escrito por: {autor}", fill=line_color, font=font)
     
     return image
-
 
 # Columna derecha: respuestas
 with col2:
