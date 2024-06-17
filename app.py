@@ -385,8 +385,7 @@ def crear_mapa_calor_por_individuo(df_resultados):
     pivot_table = df_resultados.pivot_table(
         index=['sentiment', 'pregunta'],
         columns=['rangotitulo', 'rangosubtitulo'],
-        values='pageviews',
-        aggfunc='mean'
+        values='pageviews'
     )
 
     plt.figure(figsize=(13, 5), facecolor='none')  # Hacer transparente el fondo de la figura
