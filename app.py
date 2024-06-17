@@ -16,6 +16,8 @@ from deap import base, creator, tools, algorithms
 import os
 import base64
 import re
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # CSS para el fondo y el color del texto
 def get_base64_of_bin_file(bin_file):
@@ -236,6 +238,8 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
+    st.write(f"Tópico asignado: {topic}")  # Mostrar el tópico asignado
+
     # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
@@ -248,16 +252,17 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Predecir el cluster
     cluster = modelo_clasificacion.predict(input_data)
+    st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
-    sentimiento, tipo_autor, titulo, subtitulo, pregunta = individuo
+    sentimiento, tipo_autor, rangotitulo, rangosubtitulo, pregunta = individuo
 
     pageviews_mean = df_cluster[
         (df_cluster['sentiment'] == sentimiento) &
         (df_cluster['tipo_autor'] == tipo_autor) &
-        (df_cluster['rangotitulo_encoded'] == titulo) &
-        (df_cluster['rangosubtitulo_encoded'] == subtitulo) &
+        (df_cluster['rangotitulo_encoded'] == rangotitulo) &
+        (df_cluster['rangosubtitulo_encoded'] == rangosubtitulo) &
         (df_cluster['pregunta'] == pregunta)
     ]['pageviews'].mean()
 
@@ -357,6 +362,28 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas
 
+def crear_mapa_calor(df_cluster):
+    pivot_table = df_cluster.pivot_table(
+        values='pageviews', 
+        index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
+        columns=['sentiment', 'pregunta'], 
+        aggfunc=np.mean
+    )
+    plt.figure(figsize=(10, 6), facecolor='none')  # Hacer transparente el fondo de la figura
+    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'}, alpha=0.8)
+
+    # Cambiar el color del texto a blanco
+    heatmap.set_facecolor('none')  # Hacer transparente el fondo del mapa de calor
+    heatmap.tick_params(colors='white')  # Cambiar el color de las etiquetas de los ejes a blanco
+    cbar = heatmap.collections[0].colorbar
+    cbar.ax.yaxis.set_tick_params(color='white')
+    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+
+    plt.title("Mapa de Calor de Pageviews según Estrategias", color='white')
+    plt.xlabel('Sentimiento y Pregunta', color='white')
+    plt.ylabel('Rango Título y Rango Subtítulo', color='white')
+    st.pyplot(plt)
+
 if st.button('Obtener recomendaciones'):
     if not titulo and not subtitulo:
         st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título y un subtítulo.</p>', unsafe_allow_html=True)
@@ -380,5 +407,8 @@ if st.button('Obtener recomendaciones'):
                 st.markdown("**No hace falta incluir una pregunta retórica.**")
             else:
                 st.markdown("**Hace falta incluir una pregunta retórica.**")
+
+            # Crear el mapa de calor
+            crear_mapa_calor(df)
         except ValueError as e:
             st.write(f"Error: {e}")
