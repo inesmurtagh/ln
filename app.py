@@ -320,7 +320,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <p style='font-size: 18px; color: black; font-weight: bold;'>{categoria.upper()}</p>
             </div>
             <div style="padding-top: 10px;">
-                <h2 style='font-size: 24px; margin-bottom: 5px;'>Titulo: {titulo_rec}</h2>
+                <h2 style='font-size: 24px; margin-bottom: 1px;'>Titulo: {titulo_rec}</h2>
                 <h3 style='font-size: 20px; color: grey; margin-top: 0;'>Subtitulo: {subtitulo_rec}</h3>
                 <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: black;'>Agregar un tono {tono_rec} y {retorica} pregunta retórica</p>
