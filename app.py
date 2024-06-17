@@ -324,7 +324,6 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <h3 style='font-size: 20px; color: grey;'>Subtitulo: {subtitulo_rec}</h3>
                 <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: black;'>Agregar un tono {tono_rec} y {retorica} pregunta retórica</p>
-                <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             </div>
             <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; height: auto; position: absolute; right: 15px; top: 80px;'>
