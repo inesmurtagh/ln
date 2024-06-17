@@ -16,8 +16,6 @@ from deap import base, creator, tools, algorithms
 import os
 import base64
 import re
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 # CSS para el fondo y el color del texto
 def get_base64_of_bin_file(bin_file):
@@ -238,8 +236,6 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
-    st.write(f"Tópico asignado: {topic}")  # Mostrar el tópico asignado
-
     # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
@@ -252,8 +248,33 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
 
     # Predecir el cluster
     cluster = modelo_clasificacion.predict(input_data)
-    st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
     return cluster[0]
+
+def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
+    sentimiento, tipo_autor, titulo, subtitulo, pregunta = individuo
+
+    pageviews_mean = df_cluster[
+        (df_cluster['sentiment'] == sentimiento) &
+        (df_cluster['tipo_autor'] == tipo_autor) &
+        (df_cluster['rangotitulo_encoded'] == titulo) &
+        (df_cluster['rangosubtitulo_encoded'] == subtitulo) &
+        (df_cluster['pregunta'] == pregunta)
+    ]['pageviews'].mean()
+
+    if np.isnan(pageviews_mean):
+        return -np.inf,
+
+    noise = np.random.normal(0, df_cluster['pageviews'].std())
+
+    if pageviews_mean > 0:
+        variation = ((pageviews_mean - benchmark_cluster) / benchmark_cluster) * 100 + noise
+    else:
+        variation = -np.inf
+
+    if variation > 0:
+        variation = np.log1p(variation)
+
+    return variation,
 
 # Función para algoritmos geneticos
 def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
@@ -295,7 +316,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
                      (toolbox.attr_sentimiento, toolbox.attr_tipo_autor, toolbox.attr_titulo, toolbox.attr_subtitulo, toolbox.attr_pregunta), n=1)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-    toolbox.register("evaluate", evaluar_individuo, df_cluster=df, benchmark_cluster=benchmark_cluster, resultados=resultados)
+    toolbox.register("evaluate", evaluar_individuo, df_cluster=df, benchmark_cluster=benchmark_cluster)
     toolbox.register("mate", tools.cxTwoPoint)
 
     def custom_mutate(individual, indpb):
@@ -324,8 +345,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     stats.register("min", np.min)
     stats.register("max", np.max)
 
-    # Remover verbose=True y guardar el logbook en una variable
-    logbook = algorithms.eaSimple(population, toolbox, cxpb=0.5, mutpb=0.2, ngen=40, stats=stats, halloffame=hall_of_fame, verbose=False)
+    algorithms.eaSimple(population, toolbox, cxpb=0.5, mutpb=0.2, ngen=40, stats=stats, halloffame=hall_of_fame, verbose=True)
 
     best_ind = hall_of_fame[0]
     variacion = best_ind.fitness.values[0]
@@ -335,39 +355,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     variacion_ponderada = variacion * peso_ponderado
 
     estrategias_recomendadas.append(best_ind)    
-    return estrategias_recomendadas, logbook, pd.DataFrame(resultados)
-
-# Crear el mapa de calor usando el DataFrame original
-def crear_mapa_calor(df):
-    df['sentiment'] = df['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
-    df['pregunta'] = df['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
-    df['rangotitulo_encoded'] = df['rangotitulo_encoded'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
-    df['rangosubtitulo_encoded'] = df['rangosubtitulo_encoded'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
-
-    pivot_table = df.pivot_table(
-        index=['sentiment', 'pregunta'],
-        columns=['rangotitulo_encoded', 'rangosubtitulo_encoded'],
-        values='pageviews',
-        aggfunc='mean'
-    )
-
-    plt.figure(figsize=(13, 5), facecolor='none')  # Hacer transparente el fondo de la figura
-    heatmap = sns.heatmap(pivot_table, cmap='YlOrRd', annot=False, cbar_kws={'label': 'Pageviews', 'orientation': 'horizontal'})  # Barra de color horizontal
-
-    # Cambiar el color del texto a blanco
-    heatmap.set_facecolor('none')  # Hacer transparente el fondo del mapa de calor
-    heatmap.tick_params(colors='white')  # Cambiar el color de las etiquetas de los ejes a blanco
-    cbar = heatmap.collections[0].colorbar
-    cbar.ax.xaxis.set_tick_params(color='white')
-    plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')  # Etiquetas de la barra de color en blanco
-
-    plt.xlabel('Rango Título y Rango Subtítulo', color='white')
-    plt.ylabel('Sentimiento y Pregunta', color='white')
-    plt.xticks(rotation=30, color='white')
-    plt.yticks(rotation=0, color='white')
-    plt.title("Mapa de Calor por Estrategia Evaluada", color='white')
-    plt.tight_layout()
-    st.pyplot(plt)
+    return estrategias_recomendadas
 
 if st.button('Obtener recomendaciones'):
     if not titulo and not subtitulo:
@@ -380,7 +368,7 @@ if st.button('Obtener recomendaciones'):
         try:
             modelo_clasificacion = modelo_clas(df)
             cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
-            estrategia_recomendada, logbook, _ = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
+            estrategia_recomendada = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
 
             tono = de_encode_sentimiento(estrategia_recomendada[0][0]).upper()
             rangotitulo = de_encode_rango(estrategia_recomendada[0][2]).upper()
@@ -392,8 +380,5 @@ if st.button('Obtener recomendaciones'):
                 st.markdown("**No hace falta incluir una pregunta retórica.**")
             else:
                 st.markdown("**Hace falta incluir una pregunta retórica.**")
-
-            # Crear el mapa de calor basado en el DataFrame original
-            crear_mapa_calor(df)
         except ValueError as e:
             st.write(f"Error: {e}")
