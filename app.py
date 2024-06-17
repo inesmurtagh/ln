@@ -314,7 +314,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
     tono_rec = tono_rec.lower()
     retorica = "con" if pregunta_rec.lower() != "sin pregunta" else "sin"
-    foto_num = random.randint(1, 8)
+    foto_num = random.randint(1, 9)
     foto_url = f'https://raw.githubusercontent.com/inesmurtagh/ln/main/images/foto{foto_num}.png'
     st.markdown(
         f"""
