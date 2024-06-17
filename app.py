@@ -314,7 +314,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     st.markdown(
         f"""
         <div style="background-color: white; padding: 20px; position: relative;">
-            <div style="border-bottom: 2px solid red; padding-bottom: 3px; margin-bottom: 10px;">
+            <div style="border-bottom: 2px solid black; padding-bottom: 3px; margin-bottom: 1px;">
                 <p style='font-size: 18px; color: grey;'>{categoria.upper()}</p>
             </div>
             <div style="padding-top: 10px;">
