@@ -255,51 +255,12 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
     return cluster[0]
 
-def evaluar_individuo(individuo, df_cluster, benchmark_cluster, resultados):
-    sentimiento, tipo_autor, rangotitulo, rangosubtitulo, pregunta = individuo
-
-    pageviews_mean = df_cluster[
-        (df_cluster['sentiment'] == sentimiento) &
-        (df_cluster['tipo_autor'] == tipo_autor) &
-        (df_cluster['rangotitulo_encoded'] == rangotitulo) &
-        (df_cluster['rangosubtitulo_encoded'] == rangosubtitulo) &
-        (df_cluster['pregunta'] == pregunta)
-    ]['pageviews'].mean()
-
-    if np.isnan(pageviews_mean):
-        pageviews_mean = -np.inf
-
-    noise = np.random.normal(0, df_cluster['pageviews'].std())
-
-    if pageviews_mean > 0:
-        variation = ((pageviews_mean - benchmark_cluster) / benchmark_cluster) * 100 + noise
-    else:
-        variation = -np.inf
-
-    if variation > 0:
-        variation = np.log1p(variation)
-
-    # Guardar resultados en el DataFrame
-    resultados.append({
-        'sentiment': sentimiento,
-        'tipo_autor': tipo_autor,
-        'rangotitulo': rangotitulo,
-        'rangosubtitulo': rangosubtitulo,
-        'pregunta': pregunta,
-        'pageviews': pageviews_mean
-    })
-
-    return variation,
-
 # Función para algoritmos geneticos
 def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     total_notas = len(clusters)
     df = clusters[clusters['cluster'] == cluster_objetivo]
     benchmark_cluster = df['pageviews'].mean()
     estrategias_recomendadas = []
-
-    # DataFrame para guardar los resultados de las evaluaciones
-    resultados = []
     
     combination_counts = df.groupby(['sentiment', 'tipo_autor', 'rangotitulo_encoded', 'rangosubtitulo_encoded', 'pregunta']).size()
     percentil_25 = combination_counts.quantile(0.25)
@@ -376,16 +337,18 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas, logbook, pd.DataFrame(resultados)
 
-def crear_mapa_calor_por_individuo(df_resultados):
-    df_resultados['sentiment'] = df_resultados['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
-    df_resultados['pregunta'] = df_resultados['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
-    df_resultados['rangotitulo'] = df_resultados['rangotitulo'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
-    df_resultados['rangosubtitulo'] = df_resultados['rangosubtitulo'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
+# Crear el mapa de calor usando el DataFrame original
+def crear_mapa_calor(df):
+    df['sentiment'] = df['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
+    df['pregunta'] = df['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
+    df['rangotitulo_encoded'] = df['rangotitulo_encoded'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
+    df['rangosubtitulo_encoded'] = df['rangosubtitulo_encoded'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
 
-    pivot_table = df_resultados.pivot_table(
+    pivot_table = df.pivot_table(
         index=['sentiment', 'pregunta'],
-        columns=['rangotitulo', 'rangosubtitulo'],
-        values='pageviews'
+        columns=['rangotitulo_encoded', 'rangosubtitulo_encoded'],
+        values='pageviews',
+        aggfunc='mean'
     )
 
     plt.figure(figsize=(13, 5), facecolor='none')  # Hacer transparente el fondo de la figura
@@ -417,7 +380,7 @@ if st.button('Obtener recomendaciones'):
         try:
             modelo_clasificacion = modelo_clas(df)
             cluster = predict_cluster(categoria, sentimiento, titulo, subtitulo, autor)
-            estrategia_recomendada, logbook, df_resultados = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
+            estrategia_recomendada, logbook, _ = aplicar_algoritmos_geneticos_para_cluster(df, cluster)
 
             tono = de_encode_sentimiento(estrategia_recomendada[0][0]).upper()
             rangotitulo = de_encode_rango(estrategia_recomendada[0][2]).upper()
@@ -430,7 +393,7 @@ if st.button('Obtener recomendaciones'):
             else:
                 st.markdown("**Hace falta incluir una pregunta retórica.**")
 
-            # Crear el mapa de calor basado en los resultados de las evaluaciones de los individuos
-            crear_mapa_calor_por_individuo(df_resultados)
+            # Crear el mapa de calor basado en el DataFrame original
+            crear_mapa_calor(df)
         except ValueError as e:
             st.write(f"Error: {e}")
