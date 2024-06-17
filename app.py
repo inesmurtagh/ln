@@ -78,13 +78,7 @@ try:
         .css-1lcbmhc {{
             display: flex;
             justify-content: space-between;
-        }}
-        .css-1lcbmhc > div {{
-            flex: 1;
-            margin-right: 10%;  /* Adjust the right margin for space between columns */
-        }}
-        .css-1lcbmhc > div:last-child {{
-            margin-right: 10%;
+            gap: 2rem;  /* Add gap between columns */
         }}
         </style>
         """,
