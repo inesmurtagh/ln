@@ -325,7 +325,7 @@ def crear_mapa_calor(df_cluster):
     cbar = heatmap.collections[0].colorbar
     cbar.ax.xaxis.set_tick_params(color='white')
     plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
-    cbar.ax.set_position([0, -0.05, 1, 0.1])  # Reposicionar la barra de color
+    cbar.ax.set_position([0, -0.01, 0.8, 0.1])  # Reposicionar la barra de color
     
     plt.xticks(rotation=30)
     plt.xlabel('Sentimiento y Pregunta', color='white')
@@ -334,7 +334,6 @@ def crear_mapa_calor(df_cluster):
 
 # Columna derecha: respuestas
 with col2:
-    st.write("")
     st.write("")
     if st.button('Obtener recomendaciones'):
         if not titulo and not subtitulo:
