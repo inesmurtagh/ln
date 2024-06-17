@@ -313,7 +313,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
     st.markdown(
         f"""
-        <div style="background-color: white; padding: 20px; border: 1px solid black; position: relative;">
+        <div style="background-color: white; padding: 20px; position: relative;">
             <div style="border-bottom: 2px solid black; padding-bottom: 5px; margin-bottom: 10px;">
                 <p style='font-size: 18px; color: grey;'>{categoria.upper()}</p>
             </div>
