@@ -297,12 +297,10 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 def crear_mapa_calor(df_cluster):
     df_cluster['sentiment'] = df_cluster['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
     df_cluster['pregunta'] = df_cluster['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
-    df_cluster['rangotitulo_encoded'] = df_cluster['rangotitulo_encoded'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
-    df_cluster['rangosubtitulo_encoded'] = df_cluster['rangosubtitulo_encoded'].map({0: 'Corto', 1: 'Mediano', 2: 'Largo'})
     
     pivot_table = df_cluster.pivot_table(
         values='pageviews', 
-        index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
+        index=['rangotitulo', 'rangosubtitulo'], 
         columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
