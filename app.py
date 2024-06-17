@@ -19,6 +19,7 @@ import re
 import seaborn as sns
 import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
+import random
 
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
@@ -313,6 +314,8 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
 def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
     tono_rec = tono_rec.lower()
     retorica = "con" if pregunta_rec.lower() != "sin pregunta" else "sin"
+    foto_num = random.randint(1, 8)
+    foto_url = f'https://raw.githubusercontent.com/inesmurtagh/ln/main/images/foto{foto_num}.png'
     st.markdown(
         f"""
         <div style="background-color: white; padding: 20px; position: relative; font-family: 'Open Sans', sans-serif;">
@@ -328,7 +331,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             </div>
-            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 280px; height: 210px; object-fit: cover; position: absolute; right: 20px; top: 80px;'>
+            <img src='{foto_url}' style='width: 280px; height: 210px; object-fit: cover; position: absolute; right: 20px; top: 80px;'>
         </div>
         """, unsafe_allow_html=True
     )
