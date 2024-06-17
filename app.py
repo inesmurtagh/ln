@@ -315,11 +315,11 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     retorica = "con" if pregunta_rec.lower() != "sin pregunta" else "sin"
     st.markdown(
         f"""
-        <div style="background-color: white; padding: 20px; position: relative; font-family: 'Lora', serif;">
+        <div style="background-color: white; padding: 20px; position: relative; font-family: 'Libre Baskerville', serif;">
             <div style="border-bottom: 1px solid black; margin-bottom: 1px;">
                 <p style='font-size: 18px; color: black;'>{categoria.upper()}</p>
             </div>
-            <div style="padding-top: 1px; line-height: 1;">
+            <div style="padding-top: 5px; line-height: 1.15;">
                 <p style='font-size: 24px; color: black; margin-top: 1; font-weight: bold;'>Título: {titulo_rec}</p>
                 <p style='font-size: 22px; color: grey; margin-top: 0; font-weight: bold;'>Subtítulo: {subtitulo_rec}</p>
                 <p style='font-size: 16px; color: white;'>espacio</p>
