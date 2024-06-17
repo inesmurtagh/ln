@@ -71,9 +71,9 @@ try:
             border-color: #0056b3;
         }}
         .block-container {{
-            max-width: 80%;
-            padding-left: 2rem;
-            padding-right: 2rem;
+            max-width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }}
         .css-1lcbmhc {{
             display: flex;
@@ -81,7 +81,10 @@ try:
         }}
         .css-1lcbmhc > div {{
             flex: 1;
-            margin-right: 2rem;
+            margin-right: 1rem;
+        }}
+        .css-1lcbmhc > div:last-child {{
+            margin-right: 0;
         }}
         </style>
         """,
@@ -191,8 +194,6 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
-    st.write(f"Tópico asignado: {topic}")
-
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
         'tipo_autor': [autor_value],
@@ -203,7 +204,6 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     })
 
     cluster = modelo_clasificacion.predict(input_data)
-    st.write(f"Cluster asignado: {cluster[0]}")
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
@@ -327,10 +327,10 @@ def crear_mapa_calor(df_cluster):
 
     heatmap.set_facecolor('none')
     heatmap.tick_params(colors='white')
-    cbar = heatmap.collections[0].colorbar
-    cbar.ax.xaxis.set_tick_params(color='white')
-    plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
-    cbar.ax.set_position([0, -0.05, 1, 0.1])  # Reposicionar la barra de color
+    #cbar = heatmap.collections[0].colorbar
+    #cbar.ax.xaxis.set_tick_params(color='white')
+    #plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
+    #cbar.ax.set_position([0, -0.05, 1, 0.1])  # Reposicionar la barra de color
     
     plt.xticks(rotation=30)
     plt.xlabel('Sentimiento y Pregunta', color='white')
