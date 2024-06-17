@@ -352,8 +352,8 @@ with col2:
                 else:
                     st.markdown("**Hace falta incluir una pregunta retórica.**")
         
-            # Mostrar la noticia formateada
-            mostrar_noticia(categoria, autor, rangotitulo, rangosubtitulo, tono, pregunta)
+                # Mostrar la noticia formateada
+                mostrar_noticia(categoria, autor, rangotitulo, rangosubtitulo, tono, pregunta)
 
             except ValueError as e:
                 st.write(f"Error: {e}")
