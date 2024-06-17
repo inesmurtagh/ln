@@ -390,14 +390,14 @@ def crear_mapa_calor_por_individuo(df_resultados):
     )
 
     plt.figure(figsize=(13, 5), facecolor='none')  # Hacer transparente el fondo de la figura
-    heatmap = sns.heatmap(pivot_table, cmap='YlOrRd', annot=False, cbar_kws={'label': 'Pageviews'})
+    heatmap = sns.heatmap(pivot_table, cmap='YlOrRd', annot=False, cbar_kws={'label': 'Pageviews', 'orientation': 'horizontal'})  # Barra de color horizontal
 
     # Cambiar el color del texto a blanco
     heatmap.set_facecolor('none')  # Hacer transparente el fondo del mapa de calor
     heatmap.tick_params(colors='white')  # Cambiar el color de las etiquetas de los ejes a blanco
     cbar = heatmap.collections[0].colorbar
-    cbar.ax.yaxis.set_tick_params(color='white')
-    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+    cbar.ax.xaxis.set_tick_params(color='white')
+    plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')  # Etiquetas de la barra de color en blanco
 
     plt.xlabel('Rango Título y Rango Subtítulo', color='white')
     plt.ylabel('Sentimiento y Pregunta', color='white')
