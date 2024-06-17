@@ -71,7 +71,7 @@ try:
             border-color: #0056b3;
         }}
         .block-container {{
-            max-width: 100%;
+            max-width: 80%;
             padding-left: 1rem;
             padding-right: 1rem;
         }}
