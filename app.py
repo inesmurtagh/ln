@@ -19,7 +19,6 @@ import re
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# CSS para el fondo y el color del texto
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
@@ -50,11 +49,9 @@ try:
         .stMarkdown {{
             color: white;
         }}
-        /* Ocultar la barra de menú superior */
         header {{
             visibility: hidden;
         }}
-        /* Ocultar el botón de gestión de la aplicación */
         footer {{
             visibility: hidden;
         }}
@@ -66,7 +63,7 @@ try:
         .stButton > button:hover {{
             color: white;
             background-color: #008cff;
-            border-color: #008cff;  /* Cambiar el color del borde a negro cuando se pasa el cursor por encima */
+            border-color: #008cff;
         }}
         .stButton > button:active {{
             color: white;
@@ -80,7 +77,6 @@ try:
 except FileNotFoundError:
     st.error("No se encontró la imagen de fondo. Asegúrate de que 'background.png' está en la carpeta 'images'.")
 
-# Interfaz de usuario en Streamlit
 condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
 categoria = st.selectbox("Seleccione la categoria", options=condition_options)
 sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
@@ -88,66 +84,28 @@ titulo = st.text_area("Ingrese el título:")
 subtitulo = st.text_area("Ingrese el subtítulo:")
 autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
 
-# Función para codificar 'categoria'
 def encode_categoria(categoria):
-    if categoria == 'Autos':
-        return 0
-    elif categoria == 'Construcción y Diseño':
-        return 1
-    elif categoria == 'Deportes':
-        return 2
-    elif categoria == 'Edición impresa':
-        return 3
-    elif categoria == 'El Mundo':
-        return 4
-    elif categoria == 'Entretenimiento':
-        return 5
-    elif categoria == 'Lifestyle':
-        return 6
-    elif categoria == 'Negocios y Economía':
-        return 7
-    elif categoria == 'Política':
-        return 8
-    elif categoria == 'Propiedades e Inmuebles':
-        return 9
-    elif categoria == 'Salud y Bienestar':
-        return 10
-    elif categoria == 'Sociedad':
-        return 11
+    mapping = {
+        'Autos': 0, 'Construcción y Diseño': 1, 'Deportes': 2, 'Edición impresa': 3, 
+        'El Mundo': 4, 'Entretenimiento': 5, 'Lifestyle': 6, 'Negocios y Economía': 7, 
+        'Política': 8, 'Propiedades e Inmuebles': 9, 'Salud y Bienestar': 10, 'Sociedad': 11
+    }
+    return mapping.get(categoria, -1)
 
-# Función para codificar 'rangotitulo' y 'rangosubtitulo'
 def encode_rango(rango):
-    if rango == 'Corto':
-        return 0
-    elif rango == 'Largo':
-        return 1
-    elif rango == 'Mediano':
-        return 2
+    mapping = {'Corto': 0, 'Mediano': 1, 'Largo': 2}
+    return mapping.get(rango, -1)
 
-# Función para codificar 'rangotitulo' y 'rangosubtitulo'
 def de_encode_rango(rango):
-    if rango == 0:
-        return 'Corto'
-    elif rango == 1:
-        return 'Largo'
-    else:
-        return 'Mediano'
+    mapping = {0: 'Corto', 1: 'Largo', 2: 'Mediano'}
+    return mapping.get(rango, 'Desconocido')
 
-# Función para decodificar 'sentimiento'
 def de_encode_sentimiento(sentimiento):
-    if sentimiento == 0:
-        return 'Negativo'
-    elif sentimiento == 1:
-        return 'Neutral'
-    else:
-        return 'Positivo'
+    mapping = {0: 'Negativo', 1: 'Neutral', 2: 'Positivo'}
+    return mapping.get(sentimiento, 'Desconocido')
 
-# Función para decodificar 'pregunta'
 def de_encode_pregunta(pregunta):
-    if pregunta == 0:
-        return 'Sin Pregunta'
-    else:
-        return 'Con Pregunta'
+    return 'Sin Pregunta' if pregunta == 0 else 'Con Pregunta'
 
 def cargar_modelo_lda(filename):
     return LdaModel.load(filename)
@@ -159,69 +117,47 @@ def cargar_diccionario(filename):
 
 dictionary = cargar_diccionario("data/diccionario.gensim")
 
-# Cargar el DataFrame
 df = pd.read_csv('clusters.csv')
 
-# Función para modelo de clasificación
 def modelo_clas(df):
     df['categoria_encoded'] = df['categoria'].apply(encode_categoria)
     X = df[["categoria_encoded","tipo_autor","sentiment","rangotitulo_encoded","rangosubtitulo_encoded","topics"]]
     y = df["cluster"]
-    # Dividir los datos en conjunto de entrenamiento y prueba
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # Crear y entrenar un modelo de clasificación (Random Forest en este caso)
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
-    # Predecir con el conjunto de prueba
     y_pred = model.predict(X_test)
-
     return model
 
-# Función para pre-procesamiento del texto
 def preprocess_text(text):
-    # Eliminar URLs
     text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-    # Eliminar puntuaciones y caracteres especiales
     text = re.sub(r'[^A-Za-z0-9\s]', '', text)
-    # Convertir a minúsculas
     text = text.lower()
-    # División del texto en tokens por espacios en blanco
     tokens = text.split()
 
-    # Verificar si el archivo de stopwords existe
     stopwords_path = "data/spanish"
     if not os.path.exists(stopwords_path):
         st.error(f"No se encontró el archivo de stopwords en {stopwords_path}.")
         return tokens
     
-    # Carga de stopwords en español desde el archivo CSV
     stop_words_df = pd.read_csv(stopwords_path, delimiter="\t", header=None)
     stop_words = set(stop_words_df[0].tolist())
     
-    # Eliminación de stopwords del texto
     preprocessed_text = [token for token in tokens if token not in stop_words]
     
     return preprocessed_text
 
-# Función para predecir el tópico utilizando LDA
 def predict_topic(text, lda_model, dictionary):
     tokens = preprocess_text(text)
     bow = dictionary.doc2bow(tokens)
     topics = lda_model.get_document_topics(bow)
-    return max(topics, key=lambda x: x[1])[0]  # Retorna el tópico con la mayor probabilidad
+    return max(topics, key=lambda x: x[1])[0]
 
-# Función para predecir el cluster
 def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     categoria = encode_categoria(categoria)
-
-    # Transformar el sentimiento a valores numéricos
     sentiment_value = {'Negativo': 0, 'Neutral': 1, 'Positivo': 2}[sentimiento]
-    
-    # Transformar el sentimiento a valores numéricos
     autor_value = {'Usuario': 0, 'Firma': 1}[autor]
     
-    # Calcular rangotitulo y rangosubtitulo
     bins_titulo = [0, 13, 17, float('inf')]
     labels_titulo = ['Corto', 'Mediano', 'Largo']
     rango_titulo = pd.cut([len(titulo.split())], bins=bins_titulo, labels=labels_titulo)[0]
@@ -232,15 +168,13 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
     rango_subtitulo = pd.cut([len(subtitulo.split())], bins=bins_subtitulo, labels=labels_subtitulo)[0]
     rango_subtitulo = encode_rango(rango_subtitulo)
 
-    # Predecir el tópico usando LDA
     texto_completo = titulo + " " + subtitulo
     texto_completo = preprocess_text(texto_completo)
     texto_completo = " ".join(texto_completo)
     topic = predict_topic(texto_completo, lda_model, dictionary)
     
-    st.write(f"Tópico asignado: {topic}")  # Mostrar el tópico asignado
+    st.write(f"Tópico asignado: {topic}")
 
-    # Crear un DataFrame con los valores procesados
     input_data = pd.DataFrame({
         'categoria_encoded': [categoria],
         'tipo_autor': [autor_value],
@@ -250,9 +184,8 @@ def predict_cluster(categoria, sentimiento, titulo, subtitulo, autor):
         'topics': [topic]
     })
 
-    # Predecir el cluster
     cluster = modelo_clasificacion.predict(input_data)
-    st.write(f"Cluster asignado: {cluster[0]}")  # Mostrar el cluster asignado
+    st.write(f"Cluster asignado: {cluster[0]}")
     return cluster[0]
 
 def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
@@ -281,7 +214,6 @@ def evaluar_individuo(individuo, df_cluster, benchmark_cluster):
 
     return variation,
 
-# Función para algoritmos geneticos
 def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     total_notas = len(clusters)
     df = clusters[clusters['cluster'] == cluster_objetivo]
@@ -363,23 +295,24 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 def crear_mapa_calor(df_cluster):
+    df_cluster['sentiment'] = df_cluster['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
+    df_cluster['pregunta'] = df_cluster['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
+    
     pivot_table = df_cluster.pivot_table(
         values='pageviews', 
-        index=['rangotitulo_encoded', 'rangosubtitulo_encoded'], 
+        index=['rangotitulo', 'rangosubtitulo'], 
         columns=['sentiment', 'pregunta'], 
         aggfunc=np.mean
     )
-    plt.figure(figsize=(10, 6), facecolor='none')  # Hacer transparente el fondo de la figura
-    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'label': 'Pageviews'}, alpha=0.8)
+    plt.figure(figsize=(10, 6), facecolor='none')
+    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", cbar_kws={'orientation': 'horizontal', 'label': 'Pageviews'}, alpha=0.8)
 
-    # Cambiar el color del texto a blanco
-    heatmap.set_facecolor('none')  # Hacer transparente el fondo del mapa de calor
-    heatmap.tick_params(colors='white')  # Cambiar el color de las etiquetas de los ejes a blanco
+    heatmap.set_facecolor('none')
+    heatmap.tick_params(colors='white')
     cbar = heatmap.collections[0].colorbar
-    cbar.ax.yaxis.set_tick_params(color='white')
-    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+    cbar.ax.xaxis.set_tick_params(color='white')
+    plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
 
-    plt.title("Mapa de Calor de Pageviews según Estrategias", color='white')
     plt.xlabel('Sentimiento y Pregunta', color='white')
     plt.ylabel('Rango Título y Rango Subtítulo', color='white')
     st.pyplot(plt)
@@ -408,7 +341,6 @@ if st.button('Obtener recomendaciones'):
             else:
                 st.markdown("**Hace falta incluir una pregunta retórica.**")
 
-            # Crear el mapa de calor
             crear_mapa_calor(df)
         except ValueError as e:
             st.write(f"Error: {e}")
