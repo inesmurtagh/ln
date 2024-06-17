@@ -314,11 +314,12 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     st.markdown(
         f"""
         <div style="background-color: white; padding: 20px; border: 1px solid black;">
-            <h2 style='font-size: 24px;'>{titulo_rec}</h2>
-            <h3 style='font-size: 20px; color: grey;'>{subtitulo_rec}</h3>
+            <p style='font-size: 18px; color: grey;'>{categoria.upper()}</p>
+            <h2 style='font-size: 24px;'>Titulo: {titulo_rec}</h2>
+            <h3 style='font-size: 20px; color: grey;'>Subtitulo: {subtitulo_rec}</h3>
             <p style='font-size: 18px;'>Sentimiento: {tono_rec}</p>
             <p style='font-size: 18px;'>Incluir pregunta: {pregunta_rec}</p>
-            <p style='font-size: 16px; color: grey;'>Categoría: {categoria} <br> Por {autor}</p>
+            <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 300px; float: right;'>
         </div>
         """, unsafe_allow_html=True
