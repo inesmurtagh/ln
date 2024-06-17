@@ -327,23 +327,23 @@ def crear_imagen(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta
     try:
         response = requests.get(img_url, stream=True)
         img_derecha = Image.open(response.raw)
-        img_derecha = img_derecha.resize((300, 600))
+        img_derecha = img_derecha.resize((400, 500))
         image.paste(img_derecha, (width - 300, 0))
     except Exception as e:
         st.error(f"Error al cargar la imagen: {e}")
     
     # Añadir el texto
     try:
-        font_title = ImageFont.truetype("arialbd.ttf", 32)
-        font_subtitle = ImageFont.truetype("arial.ttf", 24)
-        font_text = ImageFont.truetype("arial.ttf", 20)
+        font_title = ImageFont.truetype("arialbd.ttf", 40)
+        font_subtitle = ImageFont.truetype("arial.ttf", 32)
+        font_text = ImageFont.truetype("arial.ttf", 27)
     except IOError:
         font_title = ImageFont.load_default()
         font_subtitle = ImageFont.load_default()
         font_text = ImageFont.load_default()
     
-    draw.text((10, 10), f"Categoría: {categoria}", fill=line_color, font=font_text)
-    draw.text((10, 70), f"Título: {titulo_rec}", fill=line_color, font=font_title)
+    draw.text((10, 10), f"Categoría: {categoria}", fill=line_color, font=font_title)
+    draw.text((10, 70), f"Título: {titulo_rec}", fill=line_color, font=font_subtitle)
     draw.text((10, 130), f"Subtítulo: {subtitulo_rec}", fill=line_color, font=font_subtitle)
     draw.text((10, 190), f"Sentimiento: {tono_rec}", fill=line_color, font=font_text)
     draw.text((10, 250), f"Incluir pregunta: {pregunta_rec}", fill=line_color, font=font_text)
