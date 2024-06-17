@@ -71,7 +71,7 @@ try:
             border-color: #0056b3;
         }}
         .block-container {{
-            max-width: 100%;
+            max-width: 90%;
             padding-left: 1rem;
             padding-right: 1rem;
         }}
@@ -81,10 +81,10 @@ try:
         }}
         .css-1lcbmhc > div {{
             flex: 1;
-            margin-right: 2rem;  /* Adjust the right margin for space between columns */
+            margin-right: 5rem;  /* Adjust the right margin for space between columns */
         }}
         .css-1lcbmhc > div:last-child {{
-            margin-right: 0;
+            margin-right: 1rem;
         }}
         </style>
         """,
