@@ -320,7 +320,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <p style='font-size: 18px; color: black;'>{categoria.upper()}</p>
             </div>
             <div style="padding-top: 1px; line-height: 0.9;">
-                <p style='font-size: 24px; color: black; margin-top: 12px; font-weight: bold;'>Título: {titulo_rec}</p>
+                <p style='font-size: 24px; color: black; margin-top: 15px; font-weight: bold;'>Título: {titulo_rec}</p>
                 <p style='font-size: 22px; color: grey; font-weight: bold;'>Subtítulo: {subtitulo_rec}</p>
                 <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: #A9A9A9;'>Agregar un tono {tono_rec},</p>
@@ -328,7 +328,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
                 <p style='font-size: 16px; color: white;'>espacio</p>
                 <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
             </div>
-            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 200px; height: 200px; object-fit: cover; position: absolute; right: 20px; top: 70px;'>
+            <img src='https://raw.githubusercontent.com/inesmurtagh/ln/main/images/portada.jpg' style='width: 400px; height: 200px; object-fit: cover; position: absolute; right: 20px; top: 80px;'>
         </div>
         """, unsafe_allow_html=True
     )
