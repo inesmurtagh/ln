@@ -347,5 +347,7 @@ with col1:
                 else:
                     st.markdown("**Hace falta incluir una pregunta retórica.**")
 
-with col2:
-    crear_mapa_calor(df)
+                with col2:
+                    crear_mapa_calor(df)
+            except ValueError as e:
+                st.write(f"Error: {e}")
