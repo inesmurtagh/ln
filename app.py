@@ -48,6 +48,7 @@ try:
         }}
         .stMarkdown {{
             color: white;
+            line-height: 1.15; /* Adjust line height for markdown */
         }}
         header {{
             visibility: hidden;
@@ -329,7 +330,7 @@ with col2:
                 pregunta = de_encode_pregunta(estrategia_recomendada[0][4])
 
                 st.markdown(f"Para este tipo de nota se recomienda un tono **{tono}**,")
-                st.markdown("un título **{rangotitulo}**, con un subtítulo **{rangosubtitulo}**.")
+                st.markdown(f"un título **{rangotitulo}**, con un subtítulo **{rangosubtitulo}**.")
                 if pregunta == 'Sin Pregunta':
                     st.markdown("**No hace falta incluir una pregunta retórica.**")
                 else:
