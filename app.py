@@ -78,7 +78,7 @@ try:
         .css-1lcbmhc {{
             display: flex;
             justify-content: space-between;
-            gap: 2rem;  /* Add gap between columns */
+            gap: "medium";  /* Add gap between columns */
         }}
         </style>
         """,
