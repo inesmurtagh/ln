@@ -307,30 +307,6 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     estrategias_recomendadas.append(best_ind)    
     return estrategias_recomendadas
 
-def crear_mapa_calor(df_cluster):
-    df_cluster['sentiment'] = df_cluster['sentiment'].map({0: 'Negativo', 1: 'Neutral', 2: 'Positivo'})
-    df_cluster['pregunta'] = df_cluster['pregunta'].map({0: 'Sin Pregunta', 1: 'Con Pregunta'})
-    
-    pivot_table = df_cluster.pivot_table(
-        values='pageviews', 
-        index=['rangotitulo', 'rangosubtitulo'], 
-        columns=['sentiment', 'pregunta'], 
-        aggfunc=np.mean
-    )
-    plt.figure(figsize=(9, 7), facecolor='none')
-    heatmap = sns.heatmap(pivot_table, cmap="YlOrRd", alpha=0.8)
-
-    heatmap.set_facecolor('none')
-    heatmap.tick_params(colors='white')
-    cbar = heatmap.collections[0].colorbar
-    cbar.ax.xaxis.set_tick_params(color='white')
-    plt.setp(plt.getp(cbar.ax.axes, 'xticklabels'), color='white')
-    
-    plt.xticks(rotation=30)
-    plt.xlabel('Sentimiento y Pregunta', color='white')
-    plt.ylabel('Rango Título y Rango Subtítulo', color='white')
-    st.pyplot(plt)
-
 # Columna derecha: respuestas
 with col2:
     st.write("")
@@ -358,6 +334,5 @@ with col2:
                 else:
                     st.markdown("**Hace falta incluir una pregunta retórica.**")
 
-                crear_mapa_calor(df)
             except ValueError as e:
                 st.write(f"Error: {e}")
