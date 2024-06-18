@@ -321,7 +321,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
         f"""
         <div style="background-color: white; padding: 20px; position: relative; font-family: 'Open Sans', sans-serif;">
         <div style="border-bottom: 1px solid black; margin-bottom: 1px;">
-        <p style='font-size: 18px; color: black;'>{categoria.upper()}</p>
+        <p style='font-size: 16px; color: black;'>{categoria.upper()}</p>
         </div>
         <div style="padding-top: 1px; line-height: 0.9;">
         <p style='font-size: 24px; color: black; margin-top: 20px; font-weight: bold;'>Título: {titulo_rec}</p>
