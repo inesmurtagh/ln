@@ -319,7 +319,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     foto_url = f'https://raw.githubusercontent.com/inesmurtagh/ln/main/images/foto{foto_num}.png'
     st.markdown(
         f"""
-        <div style="background-color: white; padding: 20px; position: relative; font-family: 'Open Sans', sans-serif;">
+        <div style="background-color: white; padding: 20px; position: relative; font-family: 'Open Sans', sans-serif; border-bottom: 1px solid black;">
             <div style="border-bottom: 1px solid black; margin-bottom: 10px;">
                 <p style='font-size: 18px; color: black;'>{categoria.upper()}</p>
             </div>
@@ -334,6 +334,7 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
         </div>
         """, unsafe_allow_html=True
     )
+
 
 
 # Columna derecha: respuestas
