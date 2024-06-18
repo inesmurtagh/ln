@@ -311,6 +311,7 @@ def aplicar_algoritmos_geneticos_para_cluster(clusters, cluster_objetivo):
     return estrategias_recomendadas
 
 
+
 def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregunta_rec):
     tono_rec = tono_rec.lower()
     retorica = "con" if pregunta_rec.lower() != "sin pregunta" else "sin"
@@ -319,22 +320,21 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
     st.markdown(
         f"""
         <div style="background-color: white; padding: 20px; position: relative; font-family: 'Open Sans', sans-serif;">
-            <div style="border-bottom: 1px solid black; margin-bottom: 1px;">
+            <div style="border-bottom: 1px solid black; margin-bottom: 10px;">
                 <p style='font-size: 18px; color: black;'>{categoria.upper()}</p>
             </div>
-            <div style="padding-top: 1px; line-height: 0.9;">
+            <div style="padding-top: 10px;">
                 <p style='font-size: 24px; color: black; margin-top: 20px; font-weight: bold;'>Título: {titulo_rec}</p>
                 <p style='font-size: 22px; color: grey; font-weight: bold;'>Subtítulo: {subtitulo_rec}</p>
-                <p style='font-size: 16px; color: white;'>espacio</p>
-                <p style='font-size: 16px; color: #A9A9A9;'>Agregar un tono {tono_rec},</p>
+                <p style='font-size: 16px; color: #A9A9A9; margin-top: 10px;'>Agregar un tono {tono_rec},</p>
                 <p style='font-size: 16px; color: #A9A9A9;'>{retorica} pregunta retórica</p>
-                <p style='font-size: 16px; color: white;'>espacio</p>
-                <p style='font-size: 16px; color: grey;'>Escrita por: {autor}</p>
+                <p style='font-size: 16px; color: grey; margin-top: 10px;'>Escrita por: {autor}</p>
             </div>
             <img src='{foto_url}' style='width: 280px; height: 210px; object-fit: cover; position: absolute; right: 20px; top: 80px;'>
         </div>
         """, unsafe_allow_html=True
     )
+
 
 # Columna derecha: respuestas
 with col2:
