@@ -96,12 +96,11 @@ col1, col2 = st.columns(2, gap="large")
 
 # Columna izquierda: entrada del usuario
 with col1:
-    condition_options = ['Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad']
-    categoria = st.selectbox("Seleccione la categoria", options=condition_options)
-    sentimiento = st.selectbox("Seleccione el sentimiento:", ["Negativo", "Neutral", "Positivo"])
-    titulo = st.text_area("Ingrese el título:")
-    subtitulo = st.text_area("Ingrese el subtítulo:")
-    autor = st.selectbox("Seleccione el tipo de autor:", ["Usuario", "Firma"])
+    categoria = st.selectbox("Seleccione la categoria de la nota:",('Autos', 'Construcción y Diseño','Propiedades e Inmuebles','Deportes','Negocios y Economía','Salud y Bienestar','El Mundo','Entretenimiento','Lifestyle','Edición impresa','Política','Sociedad'),index=None,placeholder="Ingrese la categoria")
+    sentimiento = st.selectbox("Seleccione el tono de la nota:",("Negativo", "Neutral", "Positivo"),index=None,placeholder="Ingrese el tono")
+    titulo = st.text_area("Ingrese el título de la nota:")
+    subtitulo = st.text_area("Ingrese el subtítulo de la nota:")
+    autor = st.selectbox("Seleccione el tipo de autor:", ("Usuario", "Firma"),index=None,placeholder="Ingrese el tipo de autor")
 
 def encode_categoria(categoria):
     mapping = {
@@ -337,17 +336,32 @@ def mostrar_noticia(categoria, autor, titulo_rec, subtitulo_rec, tono_rec, pregu
         """, unsafe_allow_html=True
 )
 
+def campos_incompletos(categoria, sentimiento, tipo_autor, titulo, subtitulo):
+    incompletos = []
+    if not categoria:
+        incompletos.append("Categoría")
+    if not sentimiento:
+        incompletos.append("Sentimiento")
+    if not tipo_autor:
+        incompletos.append("Tipo de autor")
+    if not titulo:
+        incompletos.append("Título")
+    elif len(titulo) < 2 or re.match(r'(.)\1{2,}', titulo.lower()):  # Verifica longitud mínima y secuencias repetidas
+        incompletos.append("Título no válido (mínimo 2 caracteres y sin secuencias repetidas de 3 letras)")
+    if not subtitulo:
+        incompletos.append("Subtítulo")
+    elif len(subtitulo) < 2 or re.match(r'(.)\1{2,}', subtitulo.lower()):  # Verifica longitud mínima y secuencias repetidas
+        incompletos.append("Subtítulo no válido (mínimo 2 caracteres y sin secuencias repetidas de 3 letras)")
+    return incompletos
+
 
 # Columna derecha: respuestas
 with col2:
     st.write("")
     if st.button('Obtener recomendaciones'):
-        if not titulo and not subtitulo:
-            st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título y un subtítulo.</p>', unsafe_allow_html=True)
-        elif not titulo:
-            st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un título.</p>', unsafe_allow_html=True)
-        elif not subtitulo:
-            st.markdown('<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor ingrese un subtítulo.</p>', unsafe_allow_html=True)
+        incompletos = campos_incompletos(categoria, sentimiento, autor, titulo, subtitulo)
+        if incompletos:
+            st.markdown(f'<p style="color:white;background-color:#f44336;padding:8px;border-radius:5px;">Por favor revise los siguientes campos: {", ".join(incompletos)}</p>', unsafe_allow_html=True)
         else:
             try:
                 modelo_clasificacion = modelo_clas(df)
